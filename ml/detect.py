@@ -1,29 +1,60 @@
+
+import cv2
 from ultralytics import YOLO
 
-# Load pretrained YOLO model
+# Load pretrained model
 model = YOLO("yolo26n.pt")
+
+# Read original image
+image_path = "data/images/test.png"
+image = cv2.imread(image_path)
 
 # Run object detection
 results = model.predict(
-    source="data/images/test.png",
-    save=True,
-    conf=0.25,
+    source=image_path,
+    conf=0.75,
     device="cpu"
 )
 
-# Display detected objects
+# Draw bounding boxes manually
 for result in results:
     for box in result.boxes:
+
+        # Object information
         class_id = int(box.cls[0])
         confidence = float(box.conf[0])
-
         class_name = result.names[class_id]
 
-        # Extract bounding box coordinates
-        x1, y1, x2, y2 = box.xyxy[0].tolist()
+        # Bounding box coordinates
+        x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
 
-        print(f"\nObject: {class_name}")
-        print(f"Confidence: {confidence:.2f}")
-        print(f"Bounding Box:")
-        print(f"x1: {x1:.2f}, y1: {y1:.2f}")
-        print(f"x2: {x2:.2f}, y2: {y2:.2f}")
+        # Draw rectangle
+        cv2.rectangle(
+            image,
+            (x1, y1),
+            (x2, y2),
+            (0, 255, 0),
+            2
+        )
+
+        # Prepare label
+        label = f"{class_name} {confidence:.2f}"
+
+        # Draw label
+        cv2.putText(
+            image,
+            label,
+            (x1, max(y1 - 10, 20)),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
+
+# Save annotated image
+output_path = "runs/detect/manual-detection.png"
+
+cv2.imwrite(output_path, image)
+
+print(f"Detection image saved: {output_path}")
+print("Total detections:", len(result.boxes))
