@@ -1,11 +1,14 @@
+
 import cv2
 from ultralytics import YOLO
 from ml.nms import non_max_suppression
-from ultralytics import YOLO
 
+
+# Load YOLO model
 model = YOLO("yolo26n.pt")
 
 image_path = "data/images/test.png"
+
 
 # Mode 1: Default one-to-many + NMS
 normal_results = model.predict(
@@ -14,6 +17,7 @@ normal_results = model.predict(
     device="cpu",
     verbose=False
 )
+
 
 # Mode 2: One-to-one, NMS-free
 nms_free_results = model.predict(
@@ -24,27 +28,23 @@ nms_free_results = model.predict(
     verbose=False
 )
 
+
 print("Default mode:")
 print("Detections:", len(normal_results[0].boxes))
 
 print("\nNMS-free mode:")
 print("Detections:", len(nms_free_results[0].boxes))
 
-print("\nNMS-free detection data:")
-print(nms_free_results[0].boxes.data[:5])
 
-
-from ml.nms import non_max_suppression
-
-# Get NMS-free YOLO detections
+# Extract NMS-free detections
 detections = nms_free_results[0].boxes.data.cpu().tolist()
 
-# Extract boxes, confidence scores and class IDs
 boxes = [d[:4] for d in detections]
 scores = [d[4] for d in detections]
 classes = [int(d[5]) for d in detections]
 
-# Apply our custom class-aware NMS
+
+# Apply custom class-aware NMS
 selected_indices = non_max_suppression(
     boxes,
     scores,
@@ -52,39 +52,19 @@ selected_indices = non_max_suppression(
     iou_threshold=0.5
 )
 
-print("\nCustom NMS results:")
-print("Before custom NMS:", len(boxes))
-print("After custom NMS:", len(selected_indices))
 
-for index in selected_indices:
-    print({
-        "class": nms_free_results[0].names[classes[index]],
-        "confidence": round(scores[index], 3),
-        "box": boxes[index]
-    })
-
-detections = nms_free_results[0].boxes.data.cpu().tolist()
-
-boxes = [d[:4] for d in detections]
-scores = [d[4] for d in detections]
-classes = [int(d[5]) for d in detections]
-
-if boxes:
-    selected_indices = non_max_suppression(
-        boxes,
-        scores,
-        classes,
-        iou_threshold=0.5
-    )
-else:
-    selected_indices = []
-
+# Identify suppressed detections
 suppressed_indices = [
     i for i in range(len(boxes))
     if i not in selected_indices
 ]
 
-print("\nSuppressed detections:")
+
+print("\nCustom NMS results:")
+print("Before custom NMS:", len(boxes))
+print("After custom NMS:", len(selected_indices))
+print("Suppressed:", len(suppressed_indices))
+
 
 for index in suppressed_indices:
     print({
@@ -93,43 +73,74 @@ for index in suppressed_indices:
         "box": boxes[index]
     })
 
-# Read original image
-image = cv2.imread(image_path)
 
-# Draw only detections that survived custom NMS
-for index in selected_indices:
+# Draw detections on an image
+def draw_detections(image, indices):
 
-    x1, y1, x2, y2 = map(int, boxes[index])
+    for index in indices:
 
-    confidence = scores[index]
-    class_id = classes[index]
-    class_name = nms_free_results[0].names[class_id]
+        x1, y1, x2, y2 = map(int, boxes[index])
 
-    # Draw bounding box
-    cv2.rectangle(
-        image,
-        (x1, y1),
-        (x2, y2),
-        (0, 255, 0),
-        2
-    )
+        confidence = scores[index]
+        class_id = classes[index]
+        class_name = nms_free_results[0].names[class_id]
 
-    # Draw label
-    label = f"{class_name} {confidence:.2f}"
+        cv2.rectangle(
+            image,
+            (x1, y1),
+            (x2, y2),
+            (0, 255, 0),
+            2
+        )
 
-    cv2.putText(
-        image,
-        label,
-        (x1, max(y1 - 10, 20)),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.6,
-        (0, 255, 0),
-        2
-    )
+        label = f"{class_name} {confidence:.2f}"
 
-# Save image
-output_path = "runs/detect/custom-nms.png"
+        cv2.putText(
+            image,
+            label,
+            (x1, max(y1 - 10, 20)),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
 
-cv2.imwrite(output_path, image)
+    return image
 
-print(f"Custom NMS image saved: {output_path}")
+
+# Read original image once
+original_image = cv2.imread(image_path)
+
+if original_image is None:
+    raise FileNotFoundError(f"Could not read image: {image_path}")
+
+
+# Image 1: All NMS-free detections
+all_indices = list(range(len(boxes)))
+
+yolo_image = draw_detections(
+    original_image.copy(),
+    all_indices
+)
+
+cv2.imwrite(
+    "runs/detect/yolo-nms-free.png",
+    yolo_image
+)
+
+
+# Image 2: Custom NMS detections
+custom_image = draw_detections(
+    original_image.copy(),
+    selected_indices
+)
+
+cv2.imwrite(
+    "runs/detect/custom-nms.png",
+    custom_image
+)
+
+
+print("\nVisualization completed!")
+print("YOLO detections:", len(all_indices))
+print("Custom NMS detections:", len(selected_indices))
