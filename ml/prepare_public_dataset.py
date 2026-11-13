@@ -44,12 +44,12 @@ def filter_annotations(label_path):
     class_counts = Counter()
 
     if not label_path.exists():
-    if label_path.stem in VERIFIED_NEGATIVE_IMAGE_IDS:
-        return [], Counter()
+        if label_path.stem in VERIFIED_NEGATIVE_IMAGE_IDS:
+            return [], Counter()
 
-    raise FileNotFoundError(
-        f"Unexpected missing annotation: {label_path}"
-    )
+        raise FileNotFoundError(
+            f"Unexpected missing annotation: {label_path}"
+        )
 
     for line_number, line in enumerate(
         label_path.read_text(encoding="utf-8").splitlines(),
