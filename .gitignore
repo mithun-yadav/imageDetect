@@ -1,6 +1,16 @@
+
+# Existing rules
 .venv/
 __pycache__/
 *.pyc
 .env
 .DS_Store
 runs/
+
+# Downloaded COCO source data
+data/public/coco2017/annotations/
+data/public/coco2017/*.zip
+data/public/coco2017/images/
+
+# Generated expanded dataset
+data/training/coco2017-four-class/

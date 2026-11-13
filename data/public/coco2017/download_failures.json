@@ -1,0 +1,12 @@
+[
+  {
+    "image_id": 133295,
+    "file_name": "000000133295.jpg",
+    "error": "Failed to download 000000133295.jpg after 3 attempts: <urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "image_id": 289618,
+    "file_name": "000000289618.jpg",
+    "error": "Failed to download 000000289618.jpg after 3 attempts: <urlopen error [Errno -3] Temporary failure in name resolution>"
+  }
+]
