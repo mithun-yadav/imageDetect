@@ -15,3 +15,10 @@ data/public/coco2017/download_failures.json
 
 # Generated expanded dataset
 data/training/coco2017-four-class/
+
+# Generated COCO training dataset and backup
+data/training/coco2017-four-class.backup/
+
+# Temporary validator backups
+ml/validate_coco_training_dataset.py.bak
+ml/validate_coco_training_dataset.py.pre-cleanup.bak
