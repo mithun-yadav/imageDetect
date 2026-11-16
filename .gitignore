@@ -11,6 +11,7 @@ runs/
 data/public/coco2017/annotations/
 data/public/coco2017/*.zip
 data/public/coco2017/images/
+data/public/coco2017/download_failures.json
 
 # Generated expanded dataset
 data/training/coco2017-four-class/
