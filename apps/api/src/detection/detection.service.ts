@@ -36,6 +36,85 @@ export interface InferenceResponse {
   };
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function isValidInferenceResponse(value: unknown): value is InferenceResponse {
+  if (!isRecord(value) || value.success !== true) {
+    return false;
+  }
+
+  if (
+    !isNonEmptyString(value.filename) ||
+    !isNonEmptyString(value.model) ||
+    !isFiniteNumber(value.confidence_threshold) ||
+    value.confidence_threshold < 0 ||
+    value.confidence_threshold > 1 ||
+    !isFiniteNumber(value.processing_time_ms) ||
+    value.processing_time_ms < 0
+  ) {
+    return false;
+  }
+
+  const result = value.result;
+
+  if (
+    !isRecord(result) ||
+    !Number.isInteger(result.image_width) ||
+    (result.image_width as number) <= 0 ||
+    !Number.isInteger(result.image_height) ||
+    (result.image_height as number) <= 0 ||
+    !Number.isInteger(result.total_detections) ||
+    (result.total_detections as number) < 0 ||
+    !Array.isArray(result.detections) ||
+    result.detections.length !== result.total_detections
+  ) {
+    return false;
+  }
+
+  return result.detections.every((detection: unknown) => {
+    if (!isRecord(detection)) {
+      return false;
+    }
+
+    if (
+      !Number.isInteger(detection.class_id) ||
+      (detection.class_id as number) < 0 ||
+      !isNonEmptyString(detection.class_name) ||
+      !isFiniteNumber(detection.confidence) ||
+      detection.confidence < 0 ||
+      detection.confidence > 1 ||
+      !isRecord(detection.bbox)
+    ) {
+      return false;
+    }
+
+    const { x1, y1, x2, y2 } = detection.bbox;
+
+    return (
+      isFiniteNumber(x1) &&
+      isFiniteNumber(y1) &&
+      isFiniteNumber(x2) &&
+      isFiniteNumber(y2) &&
+      x1 >= 0 &&
+      y1 >= 0 &&
+      x2 <= (result.image_width as number) &&
+      y2 <= (result.image_height as number) &&
+      x1 < x2 &&
+      y1 < y2
+    );
+  });
+}
+
 @Injectable()
 export class DetectionService {
   private readonly inferenceUrl =
@@ -104,8 +183,20 @@ export class DetectionService {
     }
 
     try {
-      return (await response.json()) as InferenceResponse;
-    } catch {
+      const data: unknown = await response.json();
+
+      if (!isValidInferenceResponse(data)) {
+        throw new BadGatewayException(
+          'Inference service returned an invalid response',
+        );
+      }
+
+      return data;
+    } catch (error) {
+      if (error instanceof BadGatewayException) {
+        throw error;
+      }
+
       throw new BadGatewayException(
         'Inference service returned an invalid response',
       );
