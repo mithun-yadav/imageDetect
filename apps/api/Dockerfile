@@ -4,7 +4,8 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-RUN corepack enable
+RUN corepack enable \
+    && yarn config set registry https://registry.npmjs.org
 
 COPY package.json yarn.lock ./
 
@@ -21,7 +22,8 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-RUN corepack enable
+RUN corepack enable \
+    && yarn config set registry https://registry.npmjs.org
 
 COPY package.json yarn.lock ./
 
