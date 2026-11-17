@@ -1,8 +1,11 @@
+
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    HOME=/home/app \
+    YOLO_CONFIG_DIR=/home/app/.config/Ultralytics
 
 WORKDIR /app
 
@@ -24,7 +27,17 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app/ ./app/
+# Create a dedicated non-root application user.
+RUN groupadd --system app \
+    && useradd --system --gid app --create-home --home-dir /home/app app \
+    && mkdir -p /home/app/.config/Ultralytics /home/app/.cache \
+    && chown -R app:app /home/app
+
+# Copy application files with correct ownership.
+COPY --chown=app:app app/ ./app/
+
+# Run inference without root privileges.
+USER app
 
 EXPOSE 8000
 
