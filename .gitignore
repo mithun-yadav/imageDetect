@@ -7,6 +7,13 @@ __pycache__/
 .DS_Store
 runs/
 
+# Node.js dependencies
+node_modules/
+
+# Node.js build artifacts
+dist/
+*.tsbuildinfo
+
 # Downloaded COCO source data
 data/public/coco2017/annotations/
 data/public/coco2017/*.zip
