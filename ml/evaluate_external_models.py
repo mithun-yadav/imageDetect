@@ -12,8 +12,14 @@ IMAGE_DIR = PROJECT_ROOT / "data/external-evaluation/images"
 LABEL_DIR = PROJECT_ROOT / "data/external-evaluation/labels"
 
 ORIGINAL_MODEL = PROJECT_ROOT / "yolo26n.pt"
-TRAINED_MODEL = (
+
+BASELINE_MODEL = (
     PROJECT_ROOT / "runs/train/coco128-four-class/weights/best.pt"
+)
+
+EXPANDED_MODEL = (
+    PROJECT_ROOT
+    / "runs/detect/runs/train/coco2017-expanded-four-class/weights/best.pt"
 )
 
 CONFIDENCE_THRESHOLDS = [0.10, 0.25, 0.50]
@@ -273,8 +279,13 @@ def main():
             ORIGINAL_CLASS_MAPPING,
         ),
         (
-            "Fine-tuned YOLO26n",
-            TRAINED_MODEL,
+            "COCO128 baseline",
+            BASELINE_MODEL,
+            {0: 0, 1: 1, 2: 2, 3: 3},
+        ),
+        (
+            "COCO2017 expanded",
+            EXPANDED_MODEL,
             {0: 0, 1: 1, 2: 2, 3: 3},
         ),
     ]
@@ -283,7 +294,7 @@ def main():
         model = YOLO(str(model_path))
 
         for confidence in CONFIDENCE_THRESHOLDS:
-            predictions = collect_predictions(
+            predictions = collect_predictions(  
                 model,
                 image_paths,
                 confidence,
@@ -296,6 +307,22 @@ def main():
             )
 
             print_results(model_name, confidence, results)
+    expected_images = {
+        "train-image-6.jpg",
+        "train-image-10.jpg",
+        "train-image-12.jpg",
+    }
+
+    actual_images = {path.name for path in image_paths}
+
+    if actual_images != expected_images:
+        raise RuntimeError(
+            f"Unexpected evaluation images: {actual_images}"
+        )
+
+    for _, model_path, _ in models:
+        if not model_path.is_file():
+            raise FileNotFoundError(model_path)
 
 
 if __name__ == "__main__":
