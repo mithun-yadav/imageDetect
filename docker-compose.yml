@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: image-detection-inference
     restart: unless-stopped
+    cpus: 2.0
+    mem_limit: 2g
 
     environment:
       MODEL_PATH: /models/best.pt
@@ -44,6 +46,8 @@ services:
       dockerfile: Dockerfile
     container_name: image-detection-api
     restart: unless-stopped
+    cpus: 1.0
+    mem_limit: 512m
 
     environment:
       NODE_ENV: production
