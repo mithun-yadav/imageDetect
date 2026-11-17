@@ -1,13 +1,27 @@
-__pycache__/
-*.py[cod]
-.venv/
-venv/
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+dist
+coverage
+*.tsbuildinfo
+
+# Environment and secrets
 .env
 .env.*
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.git/
-runs/
-data/
-*.pt
+!.env.example
+
+# Version control
+.git
+.gitignore
+
+# Tests and reports
+test
+*.log
+
+# Editor and OS files
+.vscode
+.idea
+.DS_Store
