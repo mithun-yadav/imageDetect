@@ -8,6 +8,8 @@ services:
     restart: unless-stopped
     cpus: 2.0
     mem_limit: 2g
+    init: true
+    stop_grace_period: 30s
 
     environment:
       MODEL_PATH: /models/best.pt
@@ -48,6 +50,8 @@ services:
     restart: unless-stopped
     cpus: 1.0
     mem_limit: 512m
+    init: true
+    stop_grace_period: 30s
 
     environment:
       NODE_ENV: production
