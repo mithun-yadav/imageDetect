@@ -1,0 +1,53 @@
+
+services:
+  inference:
+    build:
+      context: ./inference
+      dockerfile: Dockerfile
+    container_name: image-detection-inference
+    restart: unless-stopped
+    environment:
+      MODEL_PATH: /models/best.pt
+      CONFIDENCE_THRESHOLD: "0.25"
+      IMAGE_SIZE: "640"
+      DEVICE: cpu
+    volumes:
+      - ./runs/train/coco128-four-class/weights/best.pt:/models/best.pt:ro
+    expose:
+      - "8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,json; r=json.load(urllib.request.urlopen('http://localhost:8000/health',timeout=5)); assert r['status']=='ok' and r['model_loaded']"
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: image-detection-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      INFERENCE_BASE_URL: http://inference:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      inference:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:3000/api/v1/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
