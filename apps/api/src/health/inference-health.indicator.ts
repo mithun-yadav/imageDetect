@@ -32,11 +32,12 @@ export class InferenceHealthIndicator {
           throw new Error('Inference model is not ready');
         }
 
-        return {
-          modelLoaded: data.model_loaded,
-          device: data.device,
-        };
+        return data;
       })
+      .withSuccessData((data) => ({
+        modelLoaded: data.model_loaded,
+        device: data.device,
+      }))
       .withTimeout(2000);
   }
 }
