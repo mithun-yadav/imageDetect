@@ -15,6 +15,7 @@ COPY . .
 
 RUN yarn build
 
+
 # Production stage
 FROM node:24-alpine AS runner
 
