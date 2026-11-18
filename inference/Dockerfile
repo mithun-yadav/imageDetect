@@ -21,12 +21,15 @@ RUN pip install --no-cache-dir \
     torch==2.14.1 \
     torchvision==0.29.1 \
     --index-url https://download.pytorch.org/whl/cpu \
-    --extra-index-url https://pypi.org/simple
+    --extra-index-url https://pypi.org/simple \
+    && rm -rf \
+       /usr/local/lib/python3.12/site-packages/torch/include \
+       /usr/local/lib/python3.12/site-packages/torch/test
 
+# Install inference application dependencies.
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
-
 # Create a dedicated non-root application user.
 RUN groupadd --system app \
     && useradd --system --gid app --create-home --home-dir /home/app app \
