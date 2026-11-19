@@ -1,0 +1,125 @@
+
+.filter-panel {
+  padding: 15px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fafcff;
+}
+
+.filter-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filter-heading h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.filter-heading p {
+  margin: 5px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.reset-filters {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.reset-filters:hover {
+  border-color: var(--color-primary);
+  color: #087e9b;
+}
+
+.confidence-filter,
+.class-filter {
+  margin-top: 18px;
+}
+
+.filter-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 9px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+}
+
+.filter-label-row strong {
+  color: #087e9b;
+  font-size: 11px;
+}
+
+.confidence-filter input[type='range'] {
+  width: 100%;
+  height: 5px;
+  accent-color: #0891b2;
+  cursor: pointer;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  color: #94a3b8;
+  font-size: 9px;
+}
+
+.class-count {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+.class-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.class-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.class-option input {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  accent-color: #0891b2;
+}
+
+.class-option:has(input:checked) {
+  border-color: rgb(0 204 255 / 40%);
+  background: var(--color-primary-soft);
+  color: #087e9b;
+}
+
+.filter-summary {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.filter-summary strong {
+  color: var(--color-text);
+}

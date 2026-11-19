@@ -17,6 +17,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/dashboard').then((m) => m.Dashboard),
       },
+      {
+        path: 'workspace',
+        title: 'Detection Workspace | VisionLab',
+        loadComponent: () =>
+          import('./features/workspace/workspace').then((m) => m.Workspace),
+      },
     ],
   },
   {
