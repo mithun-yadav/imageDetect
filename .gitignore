@@ -29,3 +29,6 @@ data/training/coco2017-four-class.backup/
 # Temporary validator backups
 ml/validate_coco_training_dataset.py.bak
 ml/validate_coco_training_dataset.py.pre-cleanup.bak
+
+# Generated Prisma Client
+/apps/api/src/generated/prisma/

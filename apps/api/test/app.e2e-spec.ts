@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { AppModule } from '../src/app.module.js';
 import { DetectionService } from '../src/detection/detection.service.js';
+import { PrismaService } from '../src/database/prisma.service.js';
 
 describe('API (e2e)', () => {
   let app: INestApplication<App>;
@@ -46,6 +47,8 @@ describe('API (e2e)', () => {
     })
       .overrideProvider(DetectionService)
       .useValue(mockDetectionService)
+      .overrideProvider(PrismaService)
+      .useValue({})
       .compile();
 
     app = moduleFixture.createNestApplication();

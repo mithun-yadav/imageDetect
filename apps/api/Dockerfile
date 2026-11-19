@@ -1,4 +1,3 @@
-
 # Build stage
 FROM node:24-alpine AS builder
 
@@ -12,6 +11,9 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
+
+# Generation needs a URL to load the config but does not connect to a database.
+RUN DATABASE_URL=postgresql://unused:unused@localhost:5432/unused yarn prisma generate
 
 RUN yarn build
 
@@ -34,6 +36,7 @@ RUN yarn install --frozen-lockfile --production \
               /usr/local/bin/npm \
               /usr/local/bin/npx
 
+# Copy compiled application, including generated Prisma Client.
 COPY --from=builder --chown=node:node /app/dist ./dist
 
 USER node
