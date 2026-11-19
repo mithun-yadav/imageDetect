@@ -1,0 +1,118 @@
+<section class="dashboard">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">OVERVIEW</p>
+            <h1>Dashboard</h1>
+            <p class="page-description">
+                Monitor your computer vision system and detection environment.
+            </p>
+        </div>
+
+        <div class="live-indicator">
+            <span class="live-dot"></span>
+            Live system status
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>System health</h2>
+                <p>Current status from your inference infrastructure.</p>
+            </div>
+        </div>
+
+        <div class="health-grid">
+            <article class="health-card">
+                <div class="card-top">
+                    <span class="card-label">API SERVICE</span>
+                    <span class="status-dot" [class.online]="apiStatus() === 'Online'"></span>
+                </div>
+                <strong class="card-value">{{ apiStatus() }}</strong>
+                <span class="card-description">NestJS readiness endpoint</span>
+            </article>
+
+            <article class="health-card">
+                <div class="card-top">
+                    <span class="card-label">INFERENCE ENGINE</span>
+                    <span class="status-dot" [class.online]="inferenceStatus() === 'Online'"></span>
+                </div>
+                <strong class="card-value">{{ inferenceStatus() }}</strong>
+                <span class="card-description">FastAPI inference service</span>
+            </article>
+
+            <article class="health-card">
+                <div class="card-top">
+                    <span class="card-label">YOLO MODEL</span>
+                    <span class="status-dot" [class.online]="modelStatus() === 'Loaded'"></span>
+                </div>
+                <strong class="card-value">{{ modelStatus() }}</strong>
+                <span class="card-description">Model availability</span>
+            </article>
+
+            <article class="health-card">
+                <div class="card-top">
+                    <span class="card-label">INFERENCE DEVICE</span>
+                    <span class="device-icon">CPU</span>
+                </div>
+                <strong class="card-value device-value">
+                    {{ inferenceDevice() | uppercase }}
+                </strong>
+                <span class="card-description">Configured execution device</span>
+            </article>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>Inference environment</h2>
+                <p>Technical information reported by the backend.</p>
+            </div>
+        </div>
+
+        <div class="environment-card">
+            <div class="environment-row">
+                <span>Inference response time</span>
+                <strong>
+                    @if (responseTime() !== null) {
+                    {{ responseTime() }} ms
+                    } @else {
+                    —
+                    }
+                </strong>
+            </div>
+
+            <div class="environment-row">
+                <span>Execution device</span>
+                <strong>{{ inferenceDevice() }}</strong>
+            </div>
+
+            <div class="environment-row">
+                <span>Model status</span>
+                <strong>{{ modelStatus() }}</strong>
+            </div>
+
+            <div class="environment-row">
+                <span>Inference service</span>
+                <strong>{{ inferenceStatus() }}</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="section upcoming-section">
+        <div class="section-heading">
+            <div>
+                <h2>Detection workspace</h2>
+                <p>
+                    Your image analysis workspace will be available here.
+                </p>
+            </div>
+        </div>
+
+        <a class="workspace-link" routerLink="/workspace">
+            Open detection workspace
+            <span aria-hidden="true">→</span>
+        </a>
+    </section>
+</section>
