@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
     libgomp1 \
+    zlib1g \
     && rm -rf /var/lib/apt/lists/*
-
 # Install compatible CPU-only PyTorch and Torchvision.
 RUN pip install --no-cache-dir \
     torch==2.14.1 \

@@ -29,7 +29,10 @@ RUN corepack enable \
 COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile --production \
-    && yarn cache clean
+    && yarn cache clean \
+    && rm -rf /usr/local/lib/node_modules/npm \
+              /usr/local/bin/npm \
+              /usr/local/bin/npx
 
 COPY --from=builder --chown=node:node /app/dist ./dist
 
