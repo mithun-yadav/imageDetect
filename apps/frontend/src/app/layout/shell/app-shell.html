@@ -1,0 +1,27 @@
+<div class="app-shell">
+  <div
+    class="sidebar-container"
+    [class.mobile-open]="isMobileNavigationOpen()"
+  >
+    <cv-sidebar (navigate)="closeMobileNavigation()" />
+  </div>
+
+  @if (isMobileNavigationOpen()) {
+    <button
+      class="mobile-backdrop"
+      type="button"
+      aria-label="Close navigation menu"
+      (click)="closeMobileNavigation()"
+    ></button>
+  }
+
+  <div class="main-column">
+    <cv-header (menuToggle)="toggleMobileNavigation()" />
+
+    <main class="page-content">
+      <div class="page-container">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
