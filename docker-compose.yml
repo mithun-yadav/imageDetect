@@ -76,6 +76,7 @@ services:
       PORT: 3000
       INFERENCE_BASE_URL: http://inference:8000
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      UPLOAD_STORAGE_PATH: ${UPLOAD_STORAGE_PATH:-/var/lib/image-detection/uploads}
 
     ports:
       - "${API_PORT:-3000}:3000"
@@ -101,6 +102,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    volumes:
+      - detection_uploads:/var/lib/image-detection/uploads
 
   postgres:
     image: postgres:17-alpine
@@ -137,3 +140,6 @@ services:
 volumes:
   postgres_data:
     name: image-detection-postgres-data
+
+  detection_uploads:
+    name: image-detection-uploads

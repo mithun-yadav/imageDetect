@@ -39,6 +39,10 @@ RUN yarn install --frozen-lockfile --production \
 # Copy compiled application, including generated Prisma Client.
 COPY --from=builder --chown=node:node /app/dist ./dist
 
+# Create persistent image-storage mount point.
+RUN mkdir -p /var/lib/image-detection/uploads \
+    && chown -R node:node /var/lib/image-detection
+
 USER node
 
 EXPOSE 3000
