@@ -23,6 +23,24 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/workspace/workspace').then((m) => m.Workspace),
       },
+      {
+        path: 'analytics',
+        title: 'Analytics | VisionLab',
+        loadComponent: () =>
+          import('./features/analytics/analytics').then((m) => m.Analytics),
+      },
+      {
+        path: 'history',
+        title: 'Detection History | VisionLab',
+        loadComponent: () =>
+          import('./features/history/history').then((m) => m.History),
+      },
+      {
+        path: 'monitoring',
+        title: 'Model Monitoring | VisionLab',
+        loadComponent: () =>
+          import('./features/monitoring/monitoring').then((m) => m.Monitoring),
+      },
     ],
   },
   {
