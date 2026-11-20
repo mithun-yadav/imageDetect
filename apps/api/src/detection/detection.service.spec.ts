@@ -7,11 +7,26 @@ import {
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { InternalServerErrorException } from '@nestjs/common';
+
+import { PrismaService } from '../database/prisma.service.js';
+import { StorageService } from '../storage/storage.service.js';
 
 import { DetectionService } from './detection.service.js';
 
 describe('DetectionService', () => {
   let service: DetectionService;
+
+  let prisma: {
+    detection: {
+      create: ReturnType<typeof vi.fn>;
+    };
+  };
+
+  let storage: {
+    save: ReturnType<typeof vi.fn>;
+    delete: ReturnType<typeof vi.fn>;
+  };
 
   const mockFile = {
     buffer: Buffer.from('fake-image-data'),
@@ -42,13 +57,94 @@ describe('DetectionService', () => {
   };
 
   beforeEach(() => {
-    service = new DetectionService();
+    prisma = {
+      detection: {
+        create: vi.fn().mockResolvedValue({ id: 'detection-id' }),
+      },
+    };
+
+    storage = {
+      save: vi
+        .fn()
+        .mockResolvedValue('550e8400-e29b-41d4-a716-446655440000.png'),
+      delete: vi.fn().mockResolvedValue(undefined),
+    };
+
+    service = new DetectionService(
+      prisma as unknown as PrismaService,
+      storage as unknown as StorageService,
+    );
+
     vi.stubGlobal('fetch', vi.fn());
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
+  });
+
+  it('should persist an image when inference returns zero detections', async () => {
+    const zeroDetectionResponse = structuredClone(mockInferenceResponse);
+
+    zeroDetectionResponse.result.total_detections = 0;
+    zeroDetectionResponse.result.detections = [];
+
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify(zeroDetectionResponse), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+
+    const result = await service.detect(mockFile);
+
+    expect(result).toEqual(zeroDetectionResponse);
+
+    expect(storage.save).toHaveBeenCalledOnce();
+
+    expect(prisma.detection.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        totalDetections: 0,
+        detections: {
+          create: [],
+        },
+      }),
+    });
+
+    expect(storage.delete).not.toHaveBeenCalled();
+  });
+
+  it('should clean up the stored image when database persistence fails', async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify(mockInferenceResponse), {
+        status: 200,
+      }),
+    );
+
+    prisma.detection.create.mockRejectedValue(
+      new Error('Database connection failed'),
+    );
+
+    await expect(service.detect(mockFile)).rejects.toThrow(
+      InternalServerErrorException,
+    );
+
+    expect(storage.save).toHaveBeenCalledOnce();
+
+    expect(storage.delete).toHaveBeenCalledWith(
+      '550e8400-e29b-41d4-a716-446655440000.png',
+    );
+  });
+
+  it('should not save an image when inference fails', async () => {
+    vi.mocked(fetch).mockRejectedValue(
+      new TypeError('Inference service unavailable'),
+    );
+
+    await expect(service.detect(mockFile)).rejects.toThrow(BadGatewayException);
+
+    expect(storage.save).not.toHaveBeenCalled();
+    expect(prisma.detection.create).not.toHaveBeenCalled();
   });
 
   it('should return detections when inference succeeds', async () => {
@@ -152,6 +248,52 @@ describe('DetectionService', () => {
     vi.mocked(fetch).mockRejectedValue(new TypeError('fetch failed'));
 
     await expect(service.detect(mockFile)).rejects.toThrow(BadGatewayException);
+  });
+
+  it('should persist a detection when no objects are detected', async () => {
+    const emptyInferenceResponse = structuredClone(mockInferenceResponse);
+
+    emptyInferenceResponse.result.total_detections = 0;
+    emptyInferenceResponse.result.detections = [];
+
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify(emptyInferenceResponse), {
+        status: 200,
+      }),
+    );
+
+    const result = await service.detect(mockFile);
+
+    expect(result).toEqual(emptyInferenceResponse);
+
+    expect(prisma.detection.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        totalDetections: 0,
+        detections: {
+          create: [],
+        },
+      }),
+    });
+  });
+
+  it('should still return an internal server error when image cleanup fails', async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify(mockInferenceResponse), {
+        status: 200,
+      }),
+    );
+
+    prisma.detection.create.mockRejectedValue(
+      new Error('Database connection failed'),
+    );
+
+    storage.delete.mockRejectedValue(new Error('Filesystem unavailable'));
+
+    await expect(service.detect(mockFile)).rejects.toThrow(
+      InternalServerErrorException,
+    );
+
+    expect(storage.delete).toHaveBeenCalledOnce();
   });
 
   it.each([

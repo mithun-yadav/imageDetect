@@ -86,6 +86,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
     healthcheck:
       test:
@@ -136,6 +138,26 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+  
+  migrate:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+      target: builder
+
+    restart: "no"
+
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - ./apps/api/prisma:/app/prisma
+
+    command: ["yarn", "prisma", "migrate", "deploy"]
 
 volumes:
   postgres_data:

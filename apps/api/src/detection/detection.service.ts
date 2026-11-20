@@ -7,6 +7,10 @@ import {
   ServiceUnavailableException,
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
+
+import { PrismaService } from '../database/prisma.service.js';
+import { StorageService } from '../storage/storage.service.js';
 
 import type { Express } from 'express';
 
@@ -120,6 +124,69 @@ export class DetectionService {
   private readonly inferenceUrl =
     process.env.INFERENCE_BASE_URL ?? 'http://127.0.0.1:8000';
 
+  private readonly logger = new Logger(DetectionService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storage: StorageService,
+  ) {}
+
+  private async persistDetection(
+    file: Express.Multer.File,
+    response: InferenceResponse,
+  ): Promise<void> {
+    const storageKey = await this.storage.save(file.buffer, file.mimetype);
+
+    try {
+      await this.prisma.detection.create({
+        data: {
+          originalFilename: file.originalname,
+          storageKey,
+          mimeType: file.mimetype,
+          fileSizeBytes: file.buffer.length,
+
+          model: response.model,
+          confidenceThreshold: response.confidence_threshold,
+          processingTimeMs: response.processing_time_ms,
+
+          imageWidth: response.result.image_width,
+          imageHeight: response.result.image_height,
+          totalDetections: response.result.total_detections,
+
+          detections: {
+            create: response.result.detections.map((item) => ({
+              classId: item.class_id,
+              className: item.class_name,
+              confidence: item.confidence,
+              x1: item.bbox.x1,
+              y1: item.bbox.y1,
+              x2: item.bbox.x2,
+              y2: item.bbox.y2,
+            })),
+          },
+        },
+      });
+    } catch (error) {
+      try {
+        await this.storage.delete(storageKey);
+      } catch (cleanupError) {
+        this.logger.error(
+          `Failed to clean up image ${storageKey} after database persistence failure`,
+          cleanupError instanceof Error
+            ? cleanupError.stack
+            : String(cleanupError),
+        );
+      }
+
+      this.logger.error(
+        'Failed to persist detection result',
+        error instanceof Error ? error.stack : String(error),
+      );
+
+      throw new InternalServerErrorException('Unable to save detection result');
+    }
+  }
+
   async detect(file: Express.Multer.File): Promise<InferenceResponse> {
     if (!file || !file.buffer?.length) {
       throw new BadRequestException('Image file is required');
@@ -182,24 +249,25 @@ export class DetectionService {
       }
     }
 
+    let data: unknown;
+
     try {
-      const data: unknown = await response.json();
-
-      if (!isValidInferenceResponse(data)) {
-        throw new BadGatewayException(
-          'Inference service returned an invalid response',
-        );
-      }
-
-      return data;
-    } catch (error) {
-      if (error instanceof BadGatewayException) {
-        throw error;
-      }
-
+      data = await response.json();
+    } catch {
       throw new BadGatewayException(
         'Inference service returned an invalid response',
       );
     }
+
+    if (!isValidInferenceResponse(data)) {
+      throw new BadGatewayException(
+        'Inference service returned an invalid response',
+      );
+    }
+
+    // Keep persistence outside the inference-response error handler.
+    await this.persistDetection(file, data);
+
+    return data;
   }
 }
