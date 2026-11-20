@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DetectionController } from './detection.controller.js';
 import { DetectionService } from './detection.service.js';
 import type { InferenceResponse } from './detection.service.js';
+import { GetDetectionsQueryDto } from './dto/get-detections-query.dto.js';
 
 describe('DetectionController', () => {
   let controller: DetectionController;
@@ -44,10 +45,12 @@ describe('DetectionController', () => {
 
   const detectionService = {
     detect: vi.fn(),
+    findAll: vi.fn(),
   };
 
   beforeEach(async () => {
     detectionService.detect.mockReset();
+    detectionService.findAll.mockReset();
 
     const moduleRef = await Test.createTestingModule({
       controllers: [DetectionController],
@@ -94,5 +97,73 @@ describe('DetectionController', () => {
     detectionService.detect.mockRejectedValue(error);
 
     await expect(controller.detect(mockFile)).rejects.toThrow(error);
+  });
+
+  describe('findAll', () => {
+    const mockHistoryResponse = {
+      success: true,
+      data: [
+        {
+          id: '73005360-02a3-4f2c-8557-f766e87f2e5f',
+          filename: 'train-image-9.jpg',
+          model: 'best.pt',
+          processingTimeMs: 2125.5,
+          imageWidth: 612,
+          imageHeight: 241,
+          totalDetections: 5,
+          createdAt: new Date('2026-11-20T10:08:23.454Z'),
+        },
+      ],
+      meta: {
+        page: 1,
+        limit: 10,
+        total: 1,
+        totalPages: 1,
+      },
+    };
+
+    it('should return paginated detection history', async () => {
+      detectionService.findAll.mockResolvedValue(mockHistoryResponse);
+
+      const query = {
+        page: 1,
+        limit: 10,
+      } as GetDetectionsQueryDto;
+
+      const result = await controller.findAll(query);
+
+      expect(result).toEqual(mockHistoryResponse);
+      expect(detectionService.findAll).toHaveBeenCalledOnce();
+      expect(detectionService.findAll).toHaveBeenCalledWith(query);
+    });
+
+    it('should pass pagination parameters to DetectionService', async () => {
+      detectionService.findAll.mockResolvedValue(mockHistoryResponse);
+
+      const query = {
+        page: 2,
+        limit: 20,
+      } as GetDetectionsQueryDto;
+
+      await controller.findAll(query);
+
+      expect(detectionService.findAll).toHaveBeenCalledWith({
+        page: 2,
+        limit: 20,
+      });
+    });
+
+    it('should propagate errors from DetectionService', async () => {
+      const error = new Error('Database connection failed');
+
+      detectionService.findAll.mockRejectedValue(error);
+
+      await expect(
+        controller.findAll({
+          page: 1,
+          limit: 10,
+        } as GetDetectionsQueryDto),
+      ).rejects.toThrow(error);
+    });
   });
 });

@@ -1,7 +1,9 @@
 import {
   BadRequestException,
   Controller,
+  Get,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -10,6 +12,7 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
+  ApiOkResponse,
   ApiOperation,
   ApiPayloadTooLargeResponse,
   ApiResponse,
@@ -21,6 +24,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { DetectionService } from './detection.service.js';
 import type { InferenceResponse } from './detection.service.js';
+import { GetDetectionsQueryDto } from './dto/get-detections-query.dto.js';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
@@ -31,6 +35,20 @@ const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 export class DetectionController {
   constructor(private readonly detectionService: DetectionService) {}
 
+  @Get()
+  @ApiOperation({
+    summary: 'Get detection history',
+    description: 'Retrieve paginated detection history.',
+  })
+  @ApiOkResponse({
+    description: 'Detection history retrieved successfully',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid pagination parameters',
+  })
+  async findAll(@Query() query: GetDetectionsQueryDto) {
+    return this.detectionService.findAll(query);
+  }
   @Post()
   @ApiOperation({
     summary: 'Detect objects in an uploaded image',

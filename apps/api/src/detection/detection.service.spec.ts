@@ -11,16 +11,19 @@ import { InternalServerErrorException } from '@nestjs/common';
 
 import { PrismaService } from '../database/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
+import { GetDetectionsQueryDto } from './dto/get-detections-query.dto.js';
 
 import { DetectionService } from './detection.service.js';
 
 describe('DetectionService', () => {
   let service: DetectionService;
-
   let prisma: {
     detection: {
       create: ReturnType<typeof vi.fn>;
+      findMany: ReturnType<typeof vi.fn>;
+      count: ReturnType<typeof vi.fn>;
     };
+    $transaction: ReturnType<typeof vi.fn>;
   };
 
   let storage: {
@@ -60,7 +63,12 @@ describe('DetectionService', () => {
     prisma = {
       detection: {
         create: vi.fn().mockResolvedValue({ id: 'detection-id' }),
+        findMany: vi.fn().mockResolvedValue([]),
+        count: vi.fn().mockResolvedValue(0),
       },
+      $transaction: vi.fn((operations: Promise<unknown>[]) =>
+        Promise.all(operations),
+      ),
     };
 
     storage = {
@@ -319,5 +327,127 @@ describe('DetectionService', () => {
     );
 
     await expect(service.detect(mockFile)).rejects.toThrow(BadGatewayException);
+  });
+
+  describe('findAll', () => {
+    it('should return paginated detection history', async () => {
+      const createdAt = new Date('2026-11-20T10:08:23.454Z');
+
+      const mockDetections = [
+        {
+          id: 'detection-id-1',
+          originalFilename: 'train-image-9.jpg',
+          model: 'best.pt',
+          processingTimeMs: 2125.5,
+          imageWidth: 612,
+          imageHeight: 241,
+          totalDetections: 5,
+          createdAt,
+        },
+      ];
+
+      prisma.detection.findMany.mockResolvedValue(mockDetections);
+      prisma.detection.count.mockResolvedValue(21);
+
+      const query = {
+        page: 2,
+        limit: 10,
+      } as GetDetectionsQueryDto;
+
+      const result = await service.findAll(query);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith({
+        where: {},
+        skip: 10,
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          originalFilename: true,
+          model: true,
+          processingTimeMs: true,
+          imageWidth: true,
+          imageHeight: true,
+          totalDetections: true,
+          createdAt: true,
+        },
+      });
+
+      expect(prisma.detection.count).toHaveBeenCalledWith({
+        where: {},
+      });
+
+      expect(prisma.$transaction).toHaveBeenCalledOnce();
+
+      expect(result).toEqual({
+        success: true,
+        data: [
+          {
+            id: 'detection-id-1',
+            filename: 'train-image-9.jpg',
+            model: 'best.pt',
+            processingTimeMs: 2125.5,
+            imageWidth: 612,
+            imageHeight: 241,
+            totalDetections: 5,
+            createdAt,
+          },
+        ],
+        meta: {
+          page: 2,
+          limit: 10,
+          total: 21,
+          totalPages: 3,
+        },
+      });
+    });
+
+    it('should return empty results when no detections exist', async () => {
+      prisma.detection.findMany.mockResolvedValue([]);
+      prisma.detection.count.mockResolvedValue(0);
+
+      const result = await service.findAll({
+        page: 1,
+        limit: 10,
+      } as GetDetectionsQueryDto);
+
+      expect(result).toEqual({
+        success: true,
+        data: [],
+        meta: {
+          page: 1,
+          limit: 10,
+          total: 0,
+          totalPages: 0,
+        },
+      });
+    });
+
+    it('should calculate the correct offset for later pages', async () => {
+      await service.findAll({
+        page: 5,
+        limit: 20,
+      } as GetDetectionsQueryDto);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skip: 80,
+          take: 20,
+        }),
+      );
+    });
+
+    it('should propagate database errors', async () => {
+      prisma.$transaction.mockRejectedValue(
+        new Error('Database connection failed'),
+      );
+
+      await expect(
+        service.findAll({
+          page: 1,
+          limit: 10,
+        } as GetDetectionsQueryDto),
+      ).rejects.toThrow('Database connection failed');
+    });
   });
 });

@@ -8,6 +8,7 @@ import {
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
+import { GetDetectionsQueryDto } from './dto/get-detections-query.dto.js';
 
 import { PrismaService } from '../database/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
@@ -185,6 +186,52 @@ export class DetectionService {
 
       throw new InternalServerErrorException('Unable to save detection result');
     }
+  }
+
+  async findAll(query: GetDetectionsQueryDto) {
+    const { page, limit } = query;
+    const skip = (page - 1) * limit;
+    const where = {};
+
+    const [detections, total] = await this.prisma.$transaction([
+      this.prisma.detection.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          originalFilename: true,
+          model: true,
+          processingTimeMs: true,
+          imageWidth: true,
+          imageHeight: true,
+          totalDetections: true,
+          createdAt: true,
+        },
+      }),
+      this.prisma.detection.count({ where }),
+    ]);
+
+    return {
+      success: true,
+      data: detections.map((detection) => ({
+        id: detection.id,
+        filename: detection.originalFilename,
+        model: detection.model,
+        processingTimeMs: detection.processingTimeMs,
+        imageWidth: detection.imageWidth,
+        imageHeight: detection.imageHeight,
+        totalDetections: detection.totalDetections,
+        createdAt: detection.createdAt,
+      })),
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async detect(file: Express.Multer.File): Promise<InferenceResponse> {
