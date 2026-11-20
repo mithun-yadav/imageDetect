@@ -1,6 +1,15 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
+import {
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  Matches,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class GetDetectionsQueryDto {
   @ApiPropertyOptional({
@@ -28,4 +37,45 @@ export class GetDetectionsQueryDto {
   @Min(1)
   @Max(100)
   limit = 10;
+
+  @ApiPropertyOptional({
+    description: 'Search by original image filename',
+    example: 'train-image',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  search?: string;
+
+  @ApiPropertyOptional({
+    description: 'Filter by detected object class',
+    example: 'person',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  className?: string;
+
+  @ApiPropertyOptional({
+    description: 'Filter by inference model',
+    example: 'best.pt',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  model?: string;
+
+  @ApiPropertyOptional({
+    description: 'Filter detections from this date (inclusive)',
+    example: '2026-11-01',
+  })
+  @IsOptional()
+  @IsDateString({ strict: true })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  dateFrom?: string;
+
+  @IsOptional()
+  @IsDateString({ strict: true })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  dateTo?: string;
 }

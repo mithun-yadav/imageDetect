@@ -449,5 +449,171 @@ describe('DetectionService', () => {
         } as GetDetectionsQueryDto),
       ).rejects.toThrow('Database connection failed');
     });
+
+    it('should filter by filename using case-insensitive partial matching', async () => {
+      await service.findAll({
+        page: 1,
+        limit: 10,
+        search: '  train-image  ',
+      } as GetDetectionsQueryDto);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            originalFilename: {
+              contains: 'train-image',
+              mode: 'insensitive',
+            },
+          },
+        }),
+      );
+    });
+
+    it('should filter by detected class name', async () => {
+      await service.findAll({
+        page: 1,
+        limit: 10,
+        className: 'person',
+      } as GetDetectionsQueryDto);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            detections: {
+              some: {
+                className: {
+                  equals: 'person',
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        }),
+      );
+    });
+
+    it('should filter by model name', async () => {
+      await service.findAll({
+        page: 1,
+        limit: 10,
+        model: 'best.pt',
+      } as GetDetectionsQueryDto);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            model: {
+              equals: 'best.pt',
+              mode: 'insensitive',
+            },
+          },
+        }),
+      );
+    });
+
+    it('should filter by an inclusive UTC date range', async () => {
+      await service.findAll({
+        page: 1,
+        limit: 10,
+        dateFrom: '2026-11-01',
+        dateTo: '2026-11-20',
+      } as GetDetectionsQueryDto);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            createdAt: {
+              gte: new Date('2026-11-01T00:00:00.000Z'),
+              lte: new Date('2026-11-20T23:59:59.999Z'),
+            },
+          },
+        }),
+      );
+    });
+
+    it('should combine all supplied filters using AND conditions', async () => {
+      await service.findAll({
+        page: 1,
+        limit: 10,
+        search: 'train',
+        className: 'person',
+        model: 'best.pt',
+        dateFrom: '2026-11-01',
+        dateTo: '2026-11-20',
+      } as GetDetectionsQueryDto);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            originalFilename: {
+              contains: 'train',
+              mode: 'insensitive',
+            },
+            detections: {
+              some: {
+                className: {
+                  equals: 'person',
+                  mode: 'insensitive',
+                },
+              },
+            },
+            model: {
+              equals: 'best.pt',
+              mode: 'insensitive',
+            },
+            createdAt: {
+              gte: new Date('2026-11-01T00:00:00.000Z'),
+              lte: new Date('2026-11-20T23:59:59.999Z'),
+            },
+          },
+        }),
+      );
+    });
+
+    it('should use the same filters for findMany and count', async () => {
+      await service.findAll({
+        page: 1,
+        limit: 10,
+        search: 'train',
+        model: 'best.pt',
+      } as GetDetectionsQueryDto);
+
+      const findManyWhere = prisma.detection.findMany.mock.calls[0][0]?.where;
+
+      const countWhere = prisma.detection.count.mock.calls[0][0]?.where;
+
+      expect(findManyWhere).toEqual(countWhere);
+    });
+
+    it('should ignore empty or whitespace-only search filters', async () => {
+      await service.findAll({
+        page: 1,
+        limit: 10,
+        search: '   ',
+        className: '   ',
+        model: '   ',
+      } as GetDetectionsQueryDto);
+
+      expect(prisma.detection.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {},
+        }),
+      );
+    });
+
+    it('should reject an invalid date range', async () => {
+      await expect(
+        service.findAll({
+          page: 1,
+          limit: 10,
+          dateFrom: '2026-11-20',
+          dateTo: '2026-11-01',
+        } as GetDetectionsQueryDto),
+      ).rejects.toThrow(BadRequestException);
+
+      expect(prisma.detection.findMany).not.toHaveBeenCalled();
+      expect(prisma.detection.count).not.toHaveBeenCalled();
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
   });
 });

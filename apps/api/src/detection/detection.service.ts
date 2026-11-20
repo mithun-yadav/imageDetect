@@ -189,9 +189,59 @@ export class DetectionService {
   }
 
   async findAll(query: GetDetectionsQueryDto) {
-    const { page, limit } = query;
+    const { page, limit, search, className, model, dateFrom, dateTo } = query;
+
+    if (dateFrom && dateTo && dateFrom > dateTo) {
+      throw new BadRequestException(
+        'dateFrom must be before or equal to dateTo',
+      );
+    }
+
     const skip = (page - 1) * limit;
-    const where = {};
+
+    const where = {
+      ...(search?.trim()
+        ? {
+            originalFilename: {
+              contains: search.trim(),
+              mode: 'insensitive' as const,
+            },
+          }
+        : {}),
+
+      ...(className?.trim()
+        ? {
+            detections: {
+              some: {
+                className: {
+                  equals: className.trim(),
+                  mode: 'insensitive' as const,
+                },
+              },
+            },
+          }
+        : {}),
+
+      ...(model?.trim()
+        ? {
+            model: {
+              equals: model.trim(),
+              mode: 'insensitive' as const,
+            },
+          }
+        : {}),
+
+      ...(dateFrom || dateTo
+        ? {
+            createdAt: {
+              ...(dateFrom
+                ? { gte: new Date(`${dateFrom}T00:00:00.000Z`) }
+                : {}),
+              ...(dateTo ? { lte: new Date(`${dateTo}T23:59:59.999Z`) } : {}),
+            },
+          }
+        : {}),
+    };
 
     const [detections, total] = await this.prisma.$transaction([
       this.prisma.detection.findMany({
