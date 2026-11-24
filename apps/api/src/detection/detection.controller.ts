@@ -6,6 +6,8 @@ import {
   Query,
   UploadedFile,
   UseInterceptors,
+  Param,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 
 import {
@@ -18,6 +20,8 @@ import {
   ApiResponse,
   ApiTags,
   ApiUnsupportedMediaTypeResponse,
+  ApiNotFoundResponse,
+  ApiParam,
 } from '@nestjs/swagger';
 
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -48,6 +52,30 @@ export class DetectionController {
   })
   async findAll(@Query() query: GetDetectionsQueryDto) {
     return this.detectionService.findAll(query);
+  }
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get detection details',
+    description:
+      'Retrieve complete detection details, including detected objects and bounding-box coordinates.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Detection UUID',
+    format: 'uuid',
+    example: '73005360-02a3-4f2c-8557-f766e87f2e5f',
+  })
+  @ApiOkResponse({
+    description: 'Detection details retrieved successfully',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid detection UUID',
+  })
+  @ApiNotFoundResponse({
+    description: 'Detection not found',
+  })
+  async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.detectionService.findOne(id);
   }
   @Post()
   @ApiOperation({

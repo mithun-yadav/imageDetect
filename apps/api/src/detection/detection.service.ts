@@ -6,6 +6,7 @@ import {
   PayloadTooLargeException,
   ServiceUnavailableException,
   UnsupportedMediaTypeException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { GetDetectionsQueryDto } from './dto/get-detections-query.dto.js';
@@ -280,6 +281,66 @@ export class DetectionService {
         limit,
         total,
         totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findOne(id: string) {
+    const detection = await this.prisma.detection.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        originalFilename: true,
+        model: true,
+        confidenceThreshold: true,
+        processingTimeMs: true,
+        imageWidth: true,
+        imageHeight: true,
+        totalDetections: true,
+        createdAt: true,
+        detections: {
+          select: {
+            id: true,
+            classId: true,
+            className: true,
+            confidence: true,
+            x1: true,
+            y1: true,
+            x2: true,
+            y2: true,
+          },
+        },
+      },
+    });
+
+    if (!detection) {
+      throw new NotFoundException(`Detection with ID ${id} was not found`);
+    }
+
+    return {
+      success: true,
+      data: {
+        id: detection.id,
+        filename: detection.originalFilename,
+        model: detection.model,
+        confidenceThreshold: detection.confidenceThreshold,
+        processingTimeMs: detection.processingTimeMs,
+        imageWidth: detection.imageWidth,
+        imageHeight: detection.imageHeight,
+        totalDetections: detection.totalDetections,
+        detections: detection.detections.map((item) => ({
+          id: item.id,
+          classId: item.classId,
+          className: item.className,
+          confidence: item.confidence,
+          bbox: {
+            x1: item.x1,
+            y1: item.y1,
+            x2: item.x2,
+            y2: item.y2,
+          },
+        })),
+        createdAt: detection.createdAt,
       },
     };
   }

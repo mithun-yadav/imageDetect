@@ -5,6 +5,7 @@ import {
   PayloadTooLargeException,
   ServiceUnavailableException,
   UnsupportedMediaTypeException,
+  NotFoundException,
 } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InternalServerErrorException } from '@nestjs/common';
@@ -21,6 +22,7 @@ describe('DetectionService', () => {
     detection: {
       create: ReturnType<typeof vi.fn>;
       findMany: ReturnType<typeof vi.fn>;
+      findUnique: ReturnType<typeof vi.fn>;
       count: ReturnType<typeof vi.fn>;
     };
     $transaction: ReturnType<typeof vi.fn>;
@@ -64,6 +66,7 @@ describe('DetectionService', () => {
       detection: {
         create: vi.fn().mockResolvedValue({ id: 'detection-id' }),
         findMany: vi.fn().mockResolvedValue([]),
+        findUnique: vi.fn().mockResolvedValue(null),
         count: vi.fn().mockResolvedValue(0),
       },
       $transaction: vi.fn((operations: Promise<unknown>[]) =>
@@ -614,6 +617,136 @@ describe('DetectionService', () => {
       expect(prisma.detection.findMany).not.toHaveBeenCalled();
       expect(prisma.detection.count).not.toHaveBeenCalled();
       expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('findOne', () => {
+    const detectionId = '73005360-02a3-4f2c-8557-f766e87f2e5f';
+
+    it('should return complete detection details with bounding boxes', async () => {
+      const createdAt = new Date('2026-11-20T10:08:23.454Z');
+
+      prisma.detection.findUnique.mockResolvedValue({
+        id: detectionId,
+        originalFilename: 'train-image-9.jpg',
+        model: 'best.pt',
+        confidenceThreshold: 0.25,
+        processingTimeMs: 2125.5,
+        imageWidth: 612,
+        imageHeight: 241,
+        totalDetections: 1,
+        createdAt,
+        detections: [
+          {
+            id: 'item-id-1',
+            classId: 2,
+            className: 'car',
+            confidence: 0.84,
+            x1: 139.22,
+            y1: 118.65,
+            x2: 262.42,
+            y2: 188.71,
+          },
+        ],
+      });
+
+      const result = await service.findOne(detectionId);
+
+      expect(prisma.detection.findUnique).toHaveBeenCalledWith({
+        where: { id: detectionId },
+        select: {
+          id: true,
+          originalFilename: true,
+          model: true,
+          confidenceThreshold: true,
+          processingTimeMs: true,
+          imageWidth: true,
+          imageHeight: true,
+          totalDetections: true,
+          createdAt: true,
+          detections: {
+            select: {
+              id: true,
+              classId: true,
+              className: true,
+              confidence: true,
+              x1: true,
+              y1: true,
+              x2: true,
+              y2: true,
+            },
+          },
+        },
+      });
+
+      expect(result).toEqual({
+        success: true,
+        data: {
+          id: detectionId,
+          filename: 'train-image-9.jpg',
+          model: 'best.pt',
+          confidenceThreshold: 0.25,
+          processingTimeMs: 2125.5,
+          imageWidth: 612,
+          imageHeight: 241,
+          totalDetections: 1,
+          detections: [
+            {
+              id: 'item-id-1',
+              classId: 2,
+              className: 'car',
+              confidence: 0.84,
+              bbox: {
+                x1: 139.22,
+                y1: 118.65,
+                x2: 262.42,
+                y2: 188.71,
+              },
+            },
+          ],
+          createdAt,
+        },
+      });
+
+      expect(result.data).not.toHaveProperty('storageKey');
+    });
+
+    it('should return detection details with an empty detections array', async () => {
+      prisma.detection.findUnique.mockResolvedValue({
+        id: detectionId,
+        originalFilename: 'empty-image.jpg',
+        model: 'best.pt',
+        confidenceThreshold: 0.25,
+        processingTimeMs: 100,
+        imageWidth: 640,
+        imageHeight: 480,
+        totalDetections: 0,
+        createdAt: new Date('2026-11-20T10:08:23.454Z'),
+        detections: [],
+      });
+
+      const result = await service.findOne(detectionId);
+
+      expect(result.data.detections).toEqual([]);
+      expect(result.data.totalDetections).toBe(0);
+    });
+
+    it('should throw NotFoundException when detection does not exist', async () => {
+      prisma.detection.findUnique.mockResolvedValue(null);
+
+      await expect(service.findOne(detectionId)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should propagate database errors', async () => {
+      prisma.detection.findUnique.mockRejectedValue(
+        new Error('Database connection failed'),
+      );
+
+      await expect(service.findOne(detectionId)).rejects.toThrow(
+        'Database connection failed',
+      );
     });
   });
 });
