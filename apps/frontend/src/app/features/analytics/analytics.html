@@ -1,0 +1,181 @@
+<main class="analytics-page">
+    <header class="page-heading">
+        <div>
+            <p class="eyebrow">INSIGHTS</p>
+            <h1>Analytics</h1>
+            <p class="page-description">
+                Understand your image processing activity and detection performance.
+            </p>
+        </div>
+
+        <button class="refresh-button" type="button" [disabled]="loading()" (click)="loadAnalytics()">
+            <span aria-hidden="true">↻</span>
+            Refresh
+        </button>
+    </header>
+
+    @if (loading()) {
+    <section class="state-card" aria-live="polite">
+        <div class="loader"></div>
+        <p>Loading analytics...</p>
+    </section>
+    } @else if (error()) {
+    <section class="state-card error-state" role="alert">
+        <h2>Unable to load analytics</h2>
+        <p>{{ error() }}</p>
+        <button class="primary-button" (click)="loadAnalytics()">
+            Try again
+        </button>
+    </section>
+    } @else if (analytics(); as data) {
+    <section class="metrics-grid" aria-label="Analytics summary">
+        <article class="metric-card">
+            <div class="metric-header">
+                <span class="metric-label">TOTAL IMAGES</span>
+                <span class="metric-icon">▧</span>
+            </div>
+            <strong class="metric-value">
+                {{ data.summary.totalImages | number }}
+            </strong>
+            <span class="metric-description">Images processed</span>
+        </article>
+
+        <article class="metric-card">
+            <div class="metric-header">
+                <span class="metric-label">OBJECTS DETECTED</span>
+                <span class="metric-icon">⌗</span>
+            </div>
+            <strong class="metric-value">
+                {{ data.summary.totalObjects | number }}
+            </strong>
+            <span class="metric-description">Total detected objects</span>
+        </article>
+
+        <article class="metric-card">
+            <div class="metric-header">
+                <span class="metric-label">AVG. PROCESSING TIME</span>
+                <span class="metric-icon">◷</span>
+            </div>
+            <strong class="metric-value">
+                {{ data.summary.averageProcessingTimeMs | number:'1.0-2' }}
+                <small>ms</small>
+            </strong>
+            <span class="metric-description">Average inference time</span>
+        </article>
+
+        <article class="metric-card">
+            <div class="metric-header">
+                <span class="metric-label">OBJECTS PER IMAGE</span>
+                <span class="metric-icon">◈</span>
+            </div>
+            <strong class="metric-value">
+                {{ data.summary.averageObjectsPerImage | number:'1.0-2' }}
+            </strong>
+            <span class="metric-description">Average detection count</span>
+        </article>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>Detection activity</h2>
+                <p>Images processed during the last seven days.</p>
+            </div>
+            <span class="period-label">LAST 7 DAYS</span>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-legend">
+                <span>
+                    <i class="legend-dot images-dot"></i>
+                    Images processed
+                </span>
+                <span>
+                    <i class="legend-dot objects-dot"></i>
+                    Objects detected
+                </span>
+            </div>
+
+            @if (activityChart().length > 0) {
+            <div class="activity-chart">
+                @for (day of activityChart(); track day.date) {
+                <div class="activity-column">
+                    <div class="bar-group">
+                        <div class="bar-wrapper">
+                            <span class="bar-value">{{ day.totalImages }}</span>
+                            <div class="activity-bar images-bar" [style.height.%]="day.imageHeight"
+                                [attr.aria-label]="day.totalImages + ' images'"></div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <span class="bar-value">{{ day.totalObjects }}</span>
+                            <div class="activity-bar objects-bar" [style.height.%]="day.objectHeight"
+                                [attr.aria-label]="day.totalObjects + ' objects'"></div>
+                        </div>
+                    </div>
+
+                    <span class="activity-label">{{ day.label }}</span>
+                </div>
+                }
+            </div>
+            } @else {
+            <div class="chart-empty">
+                No activity data available.
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>Object distribution</h2>
+                <p>Breakdown of detected objects by class.</p>
+            </div>
+        </div>
+
+        <div class="chart-card distribution-card">
+            <div class="distribution-summary">
+                <div>
+                    <strong>{{ totalClassObjects() | number }}</strong>
+                    <span>Total detected objects</span>
+                </div>
+
+                <span class="class-count">
+                    {{ classDistribution().length }} classes
+                </span>
+            </div>
+
+            @if (classDistribution().length > 0) {
+            <div class="distribution-list">
+                @for (
+                item of classDistribution();
+                track item.className
+                ) {
+                <div class="distribution-item">
+                    <div class="distribution-info">
+                        <strong>{{ item.className }}</strong>
+                        <span>
+                            {{ item.count | number }}
+                            ·
+                            {{ item.percentage | number:'1.1-1' }}%
+                        </span>
+                    </div>
+
+                    <div class="distribution-track" role="progressbar"
+                        [attr.aria-label]="item.className + ' distribution'" aria-valuemin="0" aria-valuemax="100"
+                        [attr.aria-valuenow]="item.percentage">
+                        <div class="distribution-fill" [style.width.%]="item.percentage"></div>
+                    </div>
+                </div>
+                }
+            </div>
+            } @else {
+            <div class="chart-empty">
+                No detected objects available.
+            </div>
+            }
+        </div>
+    </section>
+    }
+</main>

@@ -5,5 +5,6 @@ export const API_CONFIG = {
   endpoints: {
     health: '/health/ready',
     detections: '/detections',
+    analyticsOverview: '/analytics/overview',
   },
 } as const;
