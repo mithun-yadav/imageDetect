@@ -30,6 +30,7 @@ describe('DetectionService', () => {
 
   let storage: {
     save: ReturnType<typeof vi.fn>;
+    read: ReturnType<typeof vi.fn>;
     delete: ReturnType<typeof vi.fn>;
   };
 
@@ -78,6 +79,7 @@ describe('DetectionService', () => {
       save: vi
         .fn()
         .mockResolvedValue('550e8400-e29b-41d4-a716-446655440000.png'),
+      read: vi.fn().mockResolvedValue(Buffer.from('fake-image-data')),
       delete: vi.fn().mockResolvedValue(undefined),
     };
 
@@ -746,6 +748,68 @@ describe('DetectionService', () => {
 
       await expect(service.findOne(detectionId)).rejects.toThrow(
         'Database connection failed',
+      );
+    });
+  });
+
+  describe('findImage', () => {
+    const detectionId = '73005360-02a3-4f2c-8557-f766e87f2e5f';
+    const storageKey = '550e8400-e29b-41d4-a716-446655440000.jpg';
+
+    it('should retrieve the original image using the stored detection record', async () => {
+      const imageBuffer = Buffer.from('fake-image-data');
+
+      prisma.detection.findUnique.mockResolvedValue({
+        storageKey,
+        mimeType: 'image/jpeg',
+        originalFilename: 'train-image-9.jpg',
+      });
+
+      storage.read.mockResolvedValue(imageBuffer);
+
+      const result = await service.findImage(detectionId);
+
+      expect(prisma.detection.findUnique).toHaveBeenCalledWith({
+        where: { id: detectionId },
+        select: {
+          storageKey: true,
+          mimeType: true,
+          originalFilename: true,
+        },
+      });
+
+      expect(storage.read).toHaveBeenCalledWith(storageKey);
+
+      expect(result).toEqual({
+        buffer: imageBuffer,
+        mimeType: 'image/jpeg',
+        filename: 'train-image-9.jpg',
+      });
+    });
+
+    it('should throw NotFoundException when detection does not exist', async () => {
+      prisma.detection.findUnique.mockResolvedValue(null);
+
+      await expect(service.findImage(detectionId)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(storage.read).not.toHaveBeenCalled();
+    });
+
+    it('should propagate missing image errors from storage', async () => {
+      prisma.detection.findUnique.mockResolvedValue({
+        storageKey,
+        mimeType: 'image/jpeg',
+        originalFilename: 'train-image-9.jpg',
+      });
+
+      storage.read.mockRejectedValue(
+        new NotFoundException('Stored image not found'),
+      );
+
+      await expect(service.findImage(detectionId)).rejects.toThrow(
+        NotFoundException,
       );
     });
   });

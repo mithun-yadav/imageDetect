@@ -1,6 +1,7 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Response } from 'express';
 
 import { DetectionController } from './detection.controller.js';
 import { DetectionService } from './detection.service.js';
@@ -46,11 +47,13 @@ describe('DetectionController', () => {
   const detectionService = {
     detect: vi.fn(),
     findAll: vi.fn(),
+    findImage: vi.fn(),
   };
 
   beforeEach(async () => {
     detectionService.detect.mockReset();
     detectionService.findAll.mockReset();
+    detectionService.findImage.mockReset();
 
     const moduleRef = await Test.createTestingModule({
       controllers: [DetectionController],
@@ -163,6 +166,90 @@ describe('DetectionController', () => {
           page: 1,
           limit: 10,
         } as GetDetectionsQueryDto),
+      ).rejects.toThrow(error);
+    });
+  });
+
+  describe('findImage', () => {
+    const detectionId = '73005360-02a3-4f2c-8557-f766e87f2e5f';
+    const imageBuffer = Buffer.from('fake-image-data');
+
+    let response: {
+      set: ReturnType<typeof vi.fn>;
+      end: ReturnType<typeof vi.fn>;
+    };
+
+    beforeEach(() => {
+      response = {
+        set: vi.fn().mockReturnThis(),
+        end: vi.fn(),
+      };
+    });
+
+    it('should return the original image with correct headers', async () => {
+      detectionService.findImage.mockResolvedValue({
+        buffer: imageBuffer,
+        mimeType: 'image/jpeg',
+        filename: 'train-image-9.jpg',
+      });
+
+      await controller.findImage(detectionId, response as unknown as Response);
+
+      expect(detectionService.findImage).toHaveBeenCalledOnce();
+      expect(detectionService.findImage).toHaveBeenCalledWith(detectionId);
+
+      expect(response.set).toHaveBeenCalledWith({
+        'Content-Type': 'image/jpeg',
+        'Content-Disposition': 'inline',
+        'Content-Length': imageBuffer.length,
+        'Cache-Control': 'private, no-store',
+        'X-Content-Type-Options': 'nosniff',
+      });
+
+      expect(response.end).toHaveBeenCalledWith(imageBuffer);
+    });
+
+    it.each([
+      ['image/jpeg', 'train-image.jpg'],
+      ['image/png', 'train-image.png'],
+      ['image/webp', 'train-image.webp'],
+    ])('should support %s images', async (mimeType, filename) => {
+      detectionService.findImage.mockResolvedValue({
+        buffer: imageBuffer,
+        mimeType,
+        filename,
+      });
+
+      await controller.findImage(detectionId, response as unknown as Response);
+
+      expect(response.set).toHaveBeenCalledWith(
+        expect.objectContaining({
+          'Content-Type': mimeType,
+        }),
+      );
+
+      expect(response.end).toHaveBeenCalledWith(imageBuffer);
+    });
+
+    it('should propagate NotFoundException when the image is unavailable', async () => {
+      detectionService.findImage.mockRejectedValue(
+        new NotFoundException('Stored image not found'),
+      );
+
+      await expect(
+        controller.findImage(detectionId, response as unknown as Response),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(response.end).not.toHaveBeenCalled();
+    });
+
+    it('should propagate unexpected service errors', async () => {
+      const error = new Error('Database connection failed');
+
+      detectionService.findImage.mockRejectedValue(error);
+
+      await expect(
+        controller.findImage(detectionId, response as unknown as Response),
       ).rejects.toThrow(error);
     });
   });

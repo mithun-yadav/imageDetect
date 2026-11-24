@@ -1,4 +1,7 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -42,21 +45,30 @@ describe('StorageService', () => {
   });
 
   it('should use the correct extension for supported MIME types', async () => {
-    await expect(service.save(Buffer.from('jpeg'), 'image/jpeg')).resolves.toMatch(/\.jpg$/);
+    await expect(
+      service.save(Buffer.from('jpeg'), 'image/jpeg'),
+    ).resolves.toMatch(/\.jpg$/);
 
-    await expect(service.save(Buffer.from('png'), 'image/png')).resolves.toMatch(/\.png$/);
+    await expect(
+      service.save(Buffer.from('png'), 'image/png'),
+    ).resolves.toMatch(/\.png$/);
 
-    await expect(service.save(Buffer.from('webp'), 'image/webp')).resolves.toMatch(/\.webp$/);
+    await expect(
+      service.save(Buffer.from('webp'), 'image/webp'),
+    ).resolves.toMatch(/\.webp$/);
   });
 
   it('should reject unsupported MIME types', async () => {
-    await expect(service.save(Buffer.from('data'), 'image/gif')).rejects.toThrow(
-      InternalServerErrorException,
-    );
+    await expect(
+      service.save(Buffer.from('data'), 'image/gif'),
+    ).rejects.toThrow(InternalServerErrorException);
   });
 
   it('should delete an existing image', async () => {
-    const storageKey = await service.save(Buffer.from('fake-image-data'), 'image/png');
+    const storageKey = await service.save(
+      Buffer.from('fake-image-data'),
+      'image/png',
+    );
 
     await service.delete(storageKey);
 
@@ -64,6 +76,30 @@ describe('StorageService', () => {
   });
 
   it('should reject invalid storage keys', async () => {
-    await expect(service.delete('../important-file')).rejects.toThrow(InternalServerErrorException);
+    await expect(service.delete('../important-file')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+  });
+
+  it('should retrieve an existing image', async () => {
+    const buffer = Buffer.from('fake-image-data');
+
+    const storageKey = await service.save(buffer, 'image/png');
+
+    const retrievedBuffer = await service.read(storageKey);
+
+    expect(retrievedBuffer).toEqual(buffer);
+  });
+
+  it('should reject invalid storage keys when retrieving an image', async () => {
+    await expect(service.read('../important-file')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+  });
+
+  it('should throw NotFoundException when the image does not exist', async () => {
+    const missingKey = '550e8400-e29b-41d4-a716-446655440000.png';
+
+    await expect(service.read(missingKey)).rejects.toThrow(NotFoundException);
   });
 });

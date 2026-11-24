@@ -8,7 +8,10 @@ import {
   UseInterceptors,
   Param,
   ParseUUIDPipe,
+  Res,
 } from '@nestjs/common';
+import type { Response } from 'express';
+import { ApiProduces } from '@nestjs/swagger';
 
 import {
   ApiBadRequestResponse,
@@ -38,6 +41,49 @@ const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 @Controller('detections')
 export class DetectionController {
   constructor(private readonly detectionService: DetectionService) {}
+
+  @Get(':id/image')
+  @ApiOperation({
+    summary: 'Retrieve original detection image',
+    description:
+      'Retrieve the original uploaded image associated with a detection record.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Detection UUID',
+    format: 'uuid',
+  })
+  @ApiProduces('image/jpeg', 'image/png', 'image/webp')
+  @ApiOkResponse({
+    description: 'Original image retrieved successfully',
+    content: {
+      'image/jpeg': {},
+      'image/png': {},
+      'image/webp': {},
+    },
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid detection UUID',
+  })
+  @ApiNotFoundResponse({
+    description: 'Detection or stored image not found',
+  })
+  async findImage(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    const image = await this.detectionService.findImage(id);
+
+    response.set({
+      'Content-Type': image.mimeType,
+      'Content-Disposition': 'inline',
+      'Content-Length': image.buffer.length,
+      'Cache-Control': 'private, no-store',
+      'X-Content-Type-Options': 'nosniff',
+    });
+
+    response.end(image.buffer);
+  }
 
   @Get()
   @ApiOperation({

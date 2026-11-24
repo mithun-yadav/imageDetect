@@ -428,4 +428,31 @@ export class DetectionService {
 
     return data;
   }
+
+  async findImage(id: string): Promise<{
+    buffer: Buffer;
+    mimeType: string;
+    filename: string;
+  }> {
+    const detection = await this.prisma.detection.findUnique({
+      where: { id },
+      select: {
+        storageKey: true,
+        mimeType: true,
+        originalFilename: true,
+      },
+    });
+
+    if (!detection) {
+      throw new NotFoundException(`Detection with ID ${id} was not found`);
+    }
+
+    const buffer = await this.storage.read(detection.storageKey);
+
+    return {
+      buffer,
+      mimeType: detection.mimeType,
+      filename: detection.originalFilename,
+    };
+  }
 }
