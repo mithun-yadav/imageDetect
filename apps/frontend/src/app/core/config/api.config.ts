@@ -6,5 +6,7 @@ export const API_CONFIG = {
     health: '/health/ready',
     detections: '/detections',
     analyticsOverview: '/analytics/overview',
+    detectionDetails: '/detections',
+    detectionAnalytics: '/analytics/overview',
   },
 } as const;
