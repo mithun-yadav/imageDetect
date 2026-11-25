@@ -1,0 +1,197 @@
+<main class="detail-page">
+    <header class="page-heading">
+        <div>
+            <p class="eyebrow">ACTIVITY / DETECTION DETAILS</p>
+            <h1>Detection Details</h1>
+            <p class="page-description">
+                Review the original image and objects identified by the detection model.
+            </p>
+        </div>
+
+        <button class="back-button" type="button" (click)="goBack()">
+            <span aria-hidden="true">←</span>
+            Back to history
+        </button>
+    </header>
+
+    @if (loading()) {
+    <section class="state-card" aria-live="polite">
+        <div class="loader"></div>
+        <p>Loading detection details...</p>
+    </section>
+    } @else if (error()) {
+    <section class="state-card error-state" role="alert">
+        <h2>Unable to load detection</h2>
+        <p>{{ error() }}</p>
+        <button class="primary-button" type="button" (click)="goBack()">
+            Return to history
+        </button>
+    </section>
+    } @else if (detail(); as record) {
+    <section class="summary-grid" aria-label="Detection summary">
+        <article class="summary-card">
+            <span class="summary-label">TOTAL OBJECTS</span>
+            <strong class="summary-value">{{ record.totalDetections }}</strong>
+            <span class="summary-description">Objects identified</span>
+        </article>
+
+        <article class="summary-card">
+            <span class="summary-label">PROCESSING TIME</span>
+            <strong class="summary-value">
+                {{ record.processingTimeMs | number:'1.0-2' }}
+                <small>ms</small>
+            </strong>
+            <span class="summary-description">Inference duration</span>
+        </article>
+
+        <article class="summary-card">
+            <span class="summary-label">MODEL</span>
+            <strong class="summary-value model-value">{{ record.model }}</strong>
+            <span class="summary-description">Detection model used</span>
+        </article>
+    </section>
+
+    <section class="content-grid">
+        <article class="panel image-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Detection visualization</h2>
+                    <p>Original image with detected object boundaries.</p>
+                </div>
+                <span class="image-dimensions">
+                    {{ record.imageWidth }} × {{ record.imageHeight }}
+                </span>
+            </div>
+
+            @if (imageUrl() && !imageError()) {
+            <div class="image-stage">
+                <img [src]="imageUrl()" [alt]="'Original image: ' + record.filename" class="original-image"
+                    (error)="onImageError()" />
+
+                <svg class="detection-overlay" [attr.viewBox]="'0 0 ' + record.imageWidth + ' ' + record.imageHeight"
+                    preserveAspectRatio="xMidYMid meet" role="img"
+                    [attr.aria-label]="'Bounding boxes showing ' + record.totalDetections + ' detected objects'">
+                    @for (item of record.detections; track item.id) {
+                    <rect class="bounding-box" [attr.x]="item.bbox.x1" [attr.y]="item.bbox.y1"
+                        [attr.width]="getBoxWidth(item.bbox.x1, item.bbox.x2)"
+                        [attr.height]="getBoxHeight(item.bbox.y1, item.bbox.y2)" rx="2" />
+                    }
+                </svg>
+            </div>
+            } @else {
+            <div class="image-error" role="alert">
+                <strong>Original image unavailable</strong>
+                <p>
+                    The detection information is available, but the original image
+                    could not be loaded.
+                </p>
+            </div>
+            }
+
+            <div class="image-caption">
+                <span class="image-caption-icon">▧</span>
+                <span>{{ record.filename }}</span>
+            </div>
+        </article>
+
+        <article class="panel metadata-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Image information</h2>
+                    <p>Details about this detection record.</p>
+                </div>
+            </div>
+
+            <div class="metadata-list">
+                <div class="metadata-item">
+                    <span>Filename</span>
+                    <strong>{{ record.filename }}</strong>
+                </div>
+
+                <div class="metadata-item">
+                    <span>Model</span>
+                    <strong>{{ record.model }}</strong>
+                </div>
+
+                <div class="metadata-item">
+                    <span>Image dimensions</span>
+                    <strong>{{ record.imageWidth }} × {{ record.imageHeight }}</strong>
+                </div>
+
+                <div class="metadata-item">
+                    <span>Confidence threshold</span>
+                    <strong>{{ formatConfidence(record.confidenceThreshold) }}</strong>
+                </div>
+
+                <div class="metadata-item">
+                    <span>Processing time</span>
+                    <strong>{{ record.processingTimeMs | number:'1.0-2' }} ms</strong>
+                </div>
+
+                <div class="metadata-item">
+                    <span>Analyzed on</span>
+                    <strong>{{ record.createdAt | date:'medium' }}</strong>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="panel detections-panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Detected objects</h2>
+                <p>Individual predictions returned by the YOLO model.</p>
+            </div>
+            <span class="object-count">{{ record.detections.length }} objects</span>
+        </div>
+
+        @if (record.detections.length === 0) {
+        <div class="empty-state">
+            <h3>No objects detected</h3>
+            <p>The model did not identify any objects in this image.</p>
+        </div>
+        } @else {
+        <div class="detection-list">
+            @for (item of record.detections; track item.id; let index = $index) {
+            <article class="detection-item">
+                <div class="detection-main">
+                    <span class="detection-index">
+                        {{ (index + 1).toString().padStart(2, '0') }}
+                    </span>
+
+                    <div class="detection-name">
+                        <strong>{{ item.className }}</strong>
+                        <span>Class ID: {{ item.classId }}</span>
+                    </div>
+                </div>
+
+                <div class="confidence-section">
+                    <div class="confidence-heading">
+                        <span>Confidence</span>
+                        <strong>{{ formatConfidence(item.confidence) }}</strong>
+                    </div>
+
+                    <div class="confidence-track" role="progressbar" [attr.aria-valuenow]="item.confidence * 100"
+                        aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="'Confidence for ' + item.className">
+                        <div class="confidence-fill" [style.width.%]="item.confidence * 100"></div>
+                    </div>
+                </div>
+
+                <div class="bbox-info">
+                    <span>Bounding box</span>
+                    <code>
+                  X: {{ item.bbox.x1 | number:'1.0-1' }} –
+                  {{ item.bbox.x2 | number:'1.0-1' }}
+                </code>
+                    <code>
+                  Y: {{ item.bbox.y1 | number:'1.0-1' }} –
+                  {{ item.bbox.y2 | number:'1.0-1' }}
+                </code>
+                </div>
+            </article>
+            }
+        </div>
+        }
+    </section>
+    }
+</main>

@@ -1,0 +1,221 @@
+<main class="history-page">
+    <header class="page-heading">
+        <div>
+            <p class="eyebrow">ACTIVITY</p>
+            <h1>Detection History</h1>
+            <p class="page-description">
+                Browse, search and review previously analyzed images.
+            </p>
+        </div>
+
+        <button class="refresh-button" type="button" [disabled]="loading()" (click)="loadHistory()">
+            <span aria-hidden="true">↻</span>
+            Refresh
+        </button>
+    </header>
+
+    @if (loading() && !meta()) {
+    <section class="state-card" aria-live="polite">
+        <div class="loader"></div>
+        <p>Loading detection history...</p>
+    </section>
+    } @else if (error() && !meta()) {
+    <section class="state-card error-state" role="alert">
+        <h2>Unable to load detection history</h2>
+        <p>{{ error() }}</p>
+        <button class="primary-button" type="button" (click)="loadHistory()">
+            Try again
+        </button>
+    </section>
+    } @else {
+    <section class="summary-grid" aria-label="History summary">
+        <article class="summary-card">
+            <span class="summary-label">TOTAL IMAGES</span>
+            <strong class="summary-value">{{ meta()?.total ?? 0 }}</strong>
+            <span class="summary-description">Stored detection records</span>
+        </article>
+
+        <article class="summary-card">
+            <span class="summary-label">CURRENT PAGE</span>
+            <strong class="summary-value">{{ records().length }}</strong>
+            <span class="summary-description">Records displayed</span>
+        </article>
+
+        <article class="summary-card">
+            <span class="summary-label">TOTAL PAGES</span>
+            <strong class="summary-value">{{ meta()?.totalPages ?? 0 }}</strong>
+            <span class="summary-description">Available history pages</span>
+        </article>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>All detections</h2>
+                <p>Search and filter your previous image analyses.</p>
+            </div>
+        </div>
+
+        <div class="filter-card">
+            <div class="search-field">
+                <label for="history-search">Search filename</label>
+                <input id="history-search" type="search" placeholder="Search by image filename..." [value]="search()"
+                    (input)="search.set($any($event.target).value)" (keyup.enter)="applyFilters()" />
+            </div>
+
+            <div class="filter-grid">
+                <div class="filter-field">
+                    <label for="class-filter">Object class</label>
+                    <input id="class-filter" type="text" placeholder="e.g. person" [value]="className()"
+                        (input)="className.set($any($event.target).value)" />
+                </div>
+
+                <div class="filter-field">
+                    <label for="model-filter">Model</label>
+                    <input id="model-filter" type="text" placeholder="e.g. best.pt" [value]="model()"
+                        (input)="model.set($any($event.target).value)" />
+                </div>
+
+                <div class="filter-field">
+                    <label for="date-from">From date</label>
+                    <input id="date-from" type="date" [value]="dateFrom()"
+                        (change)="dateFrom.set($any($event.target).value)" />
+                </div>
+
+                <div class="filter-field">
+                    <label for="date-to">To date</label>
+                    <input id="date-to" type="date" [value]="dateTo()"
+                        (change)="dateTo.set($any($event.target).value)" />
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="primary-button" type="button" (click)="applyFilters()">
+                    Apply filters
+                </button>
+
+                <button class="secondary-button" type="button" (click)="resetFilters()">
+                    Reset filters
+                </button>
+            </div>
+        </div>
+
+        @if (error()) {
+        <div class="inline-error" role="alert">
+            {{ error() }}
+            <button type="button" (click)="loadHistory()">Retry</button>
+        </div>
+        }
+
+        <div class="table-card">
+            @if (loading()) {
+            <div class="table-loading" aria-live="polite">
+                Loading records...
+            </div>
+            } @else if (records().length === 0) {
+            <div class="empty-state">
+                <h3>No detection records found</h3>
+                <p>
+                    Try adjusting your search or filters, or analyze an image
+                    in the detection workspace.
+                </p>
+            </div>
+            } @else {
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>IMAGE</th>
+                            <th>MODEL</th>
+                            <th>DIMENSIONS</th>
+                            <th>OBJECTS</th>
+                            <th>PROCESSING</th>
+                            <th>DATE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (record of records(); track record.id) {
+                        <tr>
+                            <td>
+                                <div class="filename-cell">
+                                    <span class="file-icon">▧</span>
+                                    <strong>{{ record.filename }}</strong>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="model-label">{{ record.model }}</span>
+                            </td>
+
+                            <td>
+                                {{ record.imageWidth }} × {{ record.imageHeight }}
+                            </td>
+
+                            <td>
+                                <span class="count-badge">
+                                    {{ record.totalDetections }}
+                                </span>
+                            </td>
+
+                            <td>{{ record.processingTimeMs | number:'1.0-2' }} ms</td>
+
+                            <td>
+                                <span class="date-cell">
+                                    {{ record.createdAt | date:'medium' }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <button class="view-button" type="button"
+                                    [attr.aria-label]="'View details for ' + record.filename"
+                                    (click)="openDetails(record.id)">
+                                    View details →
+                                </button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="pagination">
+                <span class="pagination-info">
+                    Showing
+                    {{ ((page() - 1) * limit()) + 1 }}
+                    –
+                    {{ ((page() - 1) * limit()) + records().length }}
+                    of {{ meta()?.total ?? 0 }} records
+                </span>
+
+                <div class="pagination-controls">
+                    <label for="page-size">Rows</label>
+
+                    <select id="page-size" [value]="limit()" (change)="changeLimit($any($event.target).value)">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+
+                    <button type="button" class="page-button" [disabled]="page() <= 1 || loading()"
+                        (click)="changePage(page() - 1)" aria-label="Previous page">
+                        ←
+                    </button>
+
+                    <span class="page-indicator">
+                        {{ page() }} / {{ meta()?.totalPages ?? 0 }}
+                    </span>
+
+                    <button type="button" class="page-button"
+                        [disabled]="page() >= (meta()?.totalPages ?? 0) || loading()" (click)="changePage(page() + 1)"
+                        aria-label="Next page">
+                        →
+                    </button>
+                </div>
+            </footer>
+            }
+        </div>
+    </section>
+    }
+</main>
