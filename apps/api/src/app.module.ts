@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
+import { MonitoringModule } from './monitoring/monitoring.module.js';
 
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
@@ -20,6 +21,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     HealthModule,
     DetectionModule,
     AnalyticsModule,
+    MonitoringModule,
     DatabaseModule,
   ],
   controllers: [AppController],

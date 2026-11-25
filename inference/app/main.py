@@ -5,13 +5,16 @@ from time import perf_counter
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from PIL import Image, UnidentifiedImageError
+from ultralytics import __version__ as ultralytics_version
 
 from app.detector import ObjectDetector
+from app.metrics import InferenceMetrics
 
 
 MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 detector = ObjectDetector()
+inference_metrics = InferenceMetrics()
 
 
 @asynccontextmanager
@@ -40,6 +43,34 @@ def health():
         "model_loaded": detector.model is not None,
         "model_path": str(detector.model_path),
         "device": detector.device,
+    }
+
+
+@app.get("/monitoring")
+def monitoring():
+    model_loaded = detector.model is not None
+
+    class_names = (
+        list(detector.model.names.values())
+        if model_loaded and isinstance(detector.model.names, dict)
+        else list(detector.model.names)
+        if model_loaded
+        else []
+    )
+
+    return {
+        "status": "ok" if model_loaded else "unavailable",
+        "model": {
+            "loaded": model_loaded,
+            "name": detector.model_path.name,
+            "framework": "Ultralytics YOLO",
+            "frameworkVersion": ultralytics_version,
+            "device": detector.device,
+            "confidenceThreshold": detector.confidence,
+            "imageSize": detector.image_size,
+            "classNames": class_names,
+        },
+        "metrics": inference_metrics.get_metrics(),
     }
 
 
@@ -99,12 +130,16 @@ async def predict(file: UploadFile = File(...)):
         result = detector.predict(image)
 
     except Exception:
+        processing_time = (perf_counter() - start_time) * 1000
+        inference_metrics.record_failure(processing_time)
+
         raise HTTPException(
             status_code=500,
             detail="Object detection failed",
-        )
+        ) from None
 
     processing_time = (perf_counter() - start_time) * 1000
+    inference_metrics.record_success(processing_time)
 
     return {
         "success": True,

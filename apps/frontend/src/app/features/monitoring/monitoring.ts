@@ -1,14 +1,132 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal, DestroyRef } from '@angular/core';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, Subject, catchError, exhaustMap, finalize, merge, of, tap, timer } from 'rxjs';
+import { MonitoringService } from '../../core/services/monitoring.service';
+import { MonitoringOverview } from '../../shared/models/monitoring.model';
 
 @Component({
   selector: 'cv-monitoring',
   standalone: true,
-  template: `
-    <main>
-      <p>System</p>
-      <h1>Model Monitoring</h1>
-      <p>Inference service and model status.</p>
-    </main>
-  `,
+  imports: [DecimalPipe, DatePipe],
+  templateUrl: './monitoring.html',
+  styleUrl: './monitoring.scss',
 })
-export class Monitoring {}
+export class Monitoring {
+  private readonly monitoringService = inject(MonitoringService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly manualRefresh$ = new Subject<void>();
+
+  protected readonly monitoring = signal<MonitoringOverview | null>(null);
+  protected readonly loading = signal(true);
+  protected readonly error = signal<string | null>(null);
+  protected readonly lastUpdated = signal<Date | null>(null);
+
+  protected readonly overallStatus = computed(() => {
+    const data = this.monitoring();
+
+    if (!data) {
+      return 'unknown';
+    }
+
+    const servicesHealthy =
+      data.api.status === 'healthy' &&
+      data.database.status === 'healthy' &&
+      data.inference.status === 'healthy';
+
+    return servicesHealthy ? 'healthy' : 'degraded';
+  });
+
+  protected readonly inferenceDistribution = computed(() => {
+    const metrics = this.monitoring()?.inference.metrics;
+
+    if (!metrics || metrics.totalAttempts === 0) {
+      return {
+        successful: 0,
+        failed: 0,
+        successPercentage: 0,
+        failurePercentage: 0,
+      };
+    }
+
+    return {
+      successful: metrics.successfulInferences,
+      failed: metrics.failedInferences,
+      successPercentage: (metrics.successfulInferences / metrics.totalAttempts) * 100,
+      failurePercentage: (metrics.failedInferences / metrics.totalAttempts) * 100,
+    };
+  });
+
+  constructor() {
+    merge(of(void 0), timer(30_000, 30_000), this.manualRefresh$)
+      .pipe(
+        exhaustMap(() => {
+          if (!this.monitoring()) {
+            this.loading.set(true);
+          }
+
+          this.error.set(null);
+
+          return this.monitoringService.getOverview().pipe(
+            tap((response) => {
+              this.monitoring.set(response.data);
+              this.lastUpdated.set(new Date());
+            }),
+            catchError((error: unknown) => {
+              console.error('Failed to load monitoring data:', error);
+
+              this.error.set(
+                'Unable to refresh monitoring data. Please check the API connection and try again.',
+              );
+
+              return EMPTY;
+            }),
+            finalize(() => {
+              this.loading.set(false);
+            }),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
+
+  protected loadMonitoring(): void {
+    this.manualRefresh$.next();
+  }
+
+  protected formatUptime(seconds: number | null | undefined): string {
+    if (seconds == null || !Number.isFinite(seconds)) {
+      return '—';
+    }
+
+    const totalSeconds = Math.max(0, Math.floor(seconds));
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const remainingSeconds = totalSeconds % 60;
+
+    if (days > 0) {
+      return `${days}d ${hours}h ${minutes}m`;
+    }
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+
+    if (minutes > 0) {
+      return `${minutes}m ${remainingSeconds}s`;
+    }
+
+    return `${remainingSeconds}s`;
+  }
+
+  protected formatLatency(value: number | null | undefined): string {
+    return value == null || !Number.isFinite(value) ? '—' : `${value.toFixed(2)} ms`;
+  }
+
+  protected formatPercentage(value: number | null | undefined): string {
+    return value == null || !Number.isFinite(value) ? '—' : `${value.toFixed(2)}%`;
+  }
+}

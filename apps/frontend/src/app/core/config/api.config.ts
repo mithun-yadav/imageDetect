@@ -8,5 +8,6 @@ export const API_CONFIG = {
     analyticsOverview: '/analytics/overview',
     detectionDetails: '/detections',
     detectionAnalytics: '/analytics/overview',
+    monitoringOverview: '/monitoring/overview',
   },
 } as const;
