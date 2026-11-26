@@ -25,6 +25,9 @@ describe('DetectionService', () => {
       findUnique: ReturnType<typeof vi.fn>;
       count: ReturnType<typeof vi.fn>;
     };
+    inferenceMetric: {
+      create: ReturnType<typeof vi.fn>;
+    };
     $transaction: ReturnType<typeof vi.fn>;
   };
 
@@ -69,6 +72,9 @@ describe('DetectionService', () => {
         findMany: vi.fn().mockResolvedValue([]),
         findUnique: vi.fn().mockResolvedValue(null),
         count: vi.fn().mockResolvedValue(0),
+      },
+      inferenceMetric: {
+        create: vi.fn().mockResolvedValue({ id: 'metric-id' }),
       },
       $transaction: vi.fn((operations: Promise<unknown>[]) =>
         Promise.all(operations),
@@ -147,6 +153,13 @@ describe('DetectionService', () => {
     expect(storage.delete).toHaveBeenCalledWith(
       '550e8400-e29b-41d4-a716-446655440000.png',
     );
+
+    expect(prisma.inferenceMetric.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        status: 'SUCCESS',
+        modelName: 'best.pt',
+      }),
+    });
   });
 
   it('should not save an image when inference fails', async () => {
@@ -175,6 +188,16 @@ describe('DetectionService', () => {
 
     const [url, options] = vi.mocked(fetch).mock.calls[0];
 
+    expect(prisma.inferenceMetric.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        status: 'SUCCESS',
+        modelName: 'best.pt',
+        processingTimeMs: 35.43,
+        requestDurationMs: expect.any(Number),
+        httpStatus: 200,
+      }),
+    });
+
     expect(url).toBe('http://127.0.0.1:8000/predict');
     expect(options?.method).toBe('POST');
     expect(options?.body).toBeInstanceOf(FormData);
@@ -195,6 +218,14 @@ describe('DetectionService', () => {
     );
 
     await expect(service.detect(mockFile)).rejects.toThrow(BadGatewayException);
+
+    expect(prisma.inferenceMetric.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        status: 'FAILED',
+        httpStatus: 200,
+        errorCode: 'INVALID_INFERENCE_RESPONSE',
+      }),
+    });
   });
 
   it('should reject detections with invalid bounding boxes', async () => {
@@ -255,12 +286,27 @@ describe('DetectionService', () => {
     await expect(service.detect(mockFile)).rejects.toThrow(
       GatewayTimeoutException,
     );
+
+    expect(prisma.inferenceMetric.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        status: 'FAILED',
+        errorCode: 'INFERENCE_TIMEOUT',
+        requestDurationMs: expect.any(Number),
+      }),
+    });
   });
 
   it('should throw BadGatewayException when inference service is unreachable', async () => {
     vi.mocked(fetch).mockRejectedValue(new TypeError('fetch failed'));
 
     await expect(service.detect(mockFile)).rejects.toThrow(BadGatewayException);
+    expect(prisma.inferenceMetric.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        status: 'FAILED',
+        errorCode: 'INFERENCE_UNAVAILABLE',
+        requestDurationMs: expect.any(Number),
+      }),
+    });
   });
 
   it('should persist a detection when no objects are detected', async () => {
@@ -321,6 +367,15 @@ describe('DetectionService', () => {
       vi.mocked(fetch).mockResolvedValue(new Response(null, { status }));
 
       await expect(service.detect(mockFile)).rejects.toThrow(expectedException);
+
+      expect(prisma.inferenceMetric.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          status: 'FAILED',
+          httpStatus: status,
+          errorCode: `INFERENCE_HTTP_${status}`,
+          requestDurationMs: expect.any(Number),
+        }),
+      });
     },
   );
 
@@ -332,6 +387,14 @@ describe('DetectionService', () => {
     );
 
     await expect(service.detect(mockFile)).rejects.toThrow(BadGatewayException);
+
+    expect(prisma.inferenceMetric.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        status: 'FAILED',
+        httpStatus: 200,
+        errorCode: 'INVALID_INFERENCE_JSON',
+      }),
+    });
   });
 
   describe('findAll', () => {
@@ -812,5 +875,24 @@ describe('DetectionService', () => {
         NotFoundException,
       );
     });
+  });
+
+  it('should return detection results even when monitoring persistence fails', async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify(mockInferenceResponse), {
+        status: 200,
+      }),
+    );
+
+    prisma.inferenceMetric.create.mockRejectedValueOnce(
+      new Error('Monitoring database unavailable'),
+    );
+
+    const result = await service.detect(mockFile);
+
+    expect(result).toEqual(mockInferenceResponse);
+
+    expect(storage.save).toHaveBeenCalledOnce();
+    expect(prisma.detection.create).toHaveBeenCalledOnce();
   });
 });

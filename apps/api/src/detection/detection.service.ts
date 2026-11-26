@@ -13,6 +13,7 @@ import { GetDetectionsQueryDto } from './dto/get-detections-query.dto.js';
 
 import { PrismaService } from '../database/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
+import { performance } from 'node:perf_hooks';
 
 import type { Express } from 'express';
 
@@ -132,6 +133,28 @@ export class DetectionService {
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
   ) {}
+
+  private async recordInferenceMetric(data: {
+    status: 'SUCCESS' | 'FAILED';
+    modelName?: string;
+    processingTimeMs?: number;
+    requestDurationMs: number;
+    httpStatus?: number;
+    errorCode?: string;
+  }): Promise<void> {
+    try {
+      await this.prisma.inferenceMetric.create({
+        data,
+      });
+    } catch (error) {
+      // Monitoring must never affect the detection workflow.
+      this.logger.warn(
+        `Failed to record inference metric: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+  }
 
   private async persistDetection(
     file: Express.Multer.File,
@@ -352,7 +375,6 @@ export class DetectionService {
 
     const formData = new FormData();
 
-    // Copy the uploaded bytes into an ArrayBuffer for Node's Blob.
     const imageBytes = new Uint8Array(file.buffer);
     const imageBuffer = imageBytes.buffer.slice(
       imageBytes.byteOffset,
@@ -365,6 +387,8 @@ export class DetectionService {
 
     formData.append('file', imageBlob, file.originalname);
 
+    const startedAt = performance.now();
+
     let response: Response;
 
     try {
@@ -374,10 +398,17 @@ export class DetectionService {
         signal: AbortSignal.timeout(30_000),
       });
     } catch (error) {
-      if (
+      const isTimeout =
         error instanceof Error &&
-        (error.name === 'TimeoutError' || error.name === 'AbortError')
-      ) {
+        (error.name === 'TimeoutError' || error.name === 'AbortError');
+
+      await this.recordInferenceMetric({
+        status: 'FAILED',
+        requestDurationMs: performance.now() - startedAt,
+        errorCode: isTimeout ? 'INFERENCE_TIMEOUT' : 'INFERENCE_UNAVAILABLE',
+      });
+
+      if (isTimeout) {
         throw new GatewayTimeoutException(
           'Inference service request timed out',
         );
@@ -389,6 +420,13 @@ export class DetectionService {
     }
 
     if (!response.ok) {
+      await this.recordInferenceMetric({
+        status: 'FAILED',
+        requestDurationMs: performance.now() - startedAt,
+        httpStatus: response.status,
+        errorCode: `INFERENCE_HTTP_${response.status}`,
+      });
+
       switch (response.status) {
         case 400:
           throw new BadRequestException('Invalid image');
@@ -412,18 +450,40 @@ export class DetectionService {
     try {
       data = await response.json();
     } catch {
+      await this.recordInferenceMetric({
+        status: 'FAILED',
+        requestDurationMs: performance.now() - startedAt,
+        httpStatus: response.status,
+        errorCode: 'INVALID_INFERENCE_JSON',
+      });
+
       throw new BadGatewayException(
         'Inference service returned an invalid response',
       );
     }
 
     if (!isValidInferenceResponse(data)) {
+      await this.recordInferenceMetric({
+        status: 'FAILED',
+        requestDurationMs: performance.now() - startedAt,
+        httpStatus: response.status,
+        errorCode: 'INVALID_INFERENCE_RESPONSE',
+      });
+
       throw new BadGatewayException(
         'Inference service returned an invalid response',
       );
     }
 
-    // Keep persistence outside the inference-response error handler.
+    await this.recordInferenceMetric({
+      status: 'SUCCESS',
+      modelName: data.model,
+      processingTimeMs: data.processing_time_ms,
+      requestDurationMs: performance.now() - startedAt,
+      httpStatus: response.status,
+    });
+
+    // Keep detection persistence separate from inference monitoring.
     await this.persistDetection(file, data);
 
     return data;
