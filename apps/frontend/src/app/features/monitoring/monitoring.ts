@@ -1,9 +1,10 @@
-import { Component, computed, inject, signal, DestroyRef } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, catchError, exhaustMap, finalize, merge, of, tap, timer } from 'rxjs';
+
 import { MonitoringService } from '../../core/services/monitoring.service';
-import { MonitoringOverview } from '../../shared/models/monitoring.model';
+import { MonitoringOverview, MonitoringRange } from '../../shared/models/monitoring.model';
 
 @Component({
   selector: 'cv-monitoring',
@@ -22,6 +23,17 @@ export class Monitoring {
   protected readonly loading = signal(true);
   protected readonly error = signal<string | null>(null);
   protected readonly lastUpdated = signal<Date | null>(null);
+
+  protected readonly selectedRange = signal<MonitoringRange>('24h');
+
+  protected readonly availableRanges: {
+    label: string;
+    value: MonitoringRange;
+  }[] = [
+    { label: '24 Hours', value: '24h' },
+    { label: '7 Days', value: '7d' },
+    { label: '30 Days', value: '30d' },
+  ];
 
   protected readonly overallStatus = computed(() => {
     const data = this.monitoring();
@@ -68,7 +80,7 @@ export class Monitoring {
 
           this.error.set(null);
 
-          return this.monitoringService.getOverview().pipe(
+          return this.monitoringService.getOverview(this.selectedRange()).pipe(
             tap((response) => {
               this.monitoring.set(response.data);
               this.lastUpdated.set(new Date());
@@ -93,6 +105,15 @@ export class Monitoring {
   }
 
   protected loadMonitoring(): void {
+    this.manualRefresh$.next();
+  }
+
+  protected changeRange(range: MonitoringRange): void {
+    if (this.selectedRange() === range) {
+      return;
+    }
+
+    this.selectedRange.set(range);
     this.manualRefresh$.next();
   }
 

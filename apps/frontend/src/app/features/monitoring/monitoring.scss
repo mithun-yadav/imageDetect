@@ -144,7 +144,7 @@ h1 {
 }
 
 .status-pill {
-    display: inline-flex;
+  display: inline-flex;
   align-items: center;
   padding: 6px 10px;
   border: 1px solid transparent;
@@ -276,7 +276,10 @@ h1 {
   color: var(--color-text-secondary);
 }
 
-.service-detail strong {
+.service-detail strong,
+.configuration-item strong,
+.runtime-item strong,
+.latency-grid strong {
   overflow-wrap: anywhere;
   font-weight: 700;
 }
@@ -347,9 +350,7 @@ h1 {
 }
 
 .latency-grid strong {
-  overflow-wrap: anywhere;
   font-size: 14px;
-  font-weight: 700;
 }
 
 .metrics-note {
@@ -363,7 +364,8 @@ h1 {
   margin-top: 16px;
 }
 
-.distribution-bar {
+.distribution-bar,
+.trend-bar {
   display: flex;
   height: 10px;
   overflow: hidden;
@@ -371,11 +373,13 @@ h1 {
   background: var(--color-surface-muted);
 }
 
-.distribution-success {
+.distribution-success,
+.trend-success {
   background: #16a34a;
 }
 
-.distribution-failure {
+.distribution-failure,
+.trend-failure {
   background: #dc2626;
 }
 
@@ -409,6 +413,70 @@ h1 {
 
 .distribution-legend small {
   color: var(--color-text-secondary);
+}
+
+.historical-heading {
+  align-items: flex-end;
+}
+
+.range-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.range-button {
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.range-button-active {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.historical-trends {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.trend-item {
+  display: grid;
+  grid-template-columns: 110px minmax(100px, 1fr) 90px;
+  align-items: center;
+  gap: 15px;
+}
+
+.trend-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trend-details span,
+.trend-latency {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.trend-details strong {
+  font-size: 11px;
+}
+
+.trend-latency {
+  text-align: right;
 }
 
 .model-card {
@@ -446,9 +514,7 @@ h1 {
 }
 
 .configuration-item strong {
-  overflow-wrap: anywhere;
   font-size: 13px;
-  font-weight: 700;
 }
 
 .classes-section {
@@ -492,9 +558,7 @@ h1 {
 }
 
 .runtime-item strong {
-  overflow-wrap: anywhere;
   font-size: 13px;
-  font-weight: 700;
 }
 
 .state-card {
@@ -576,8 +640,7 @@ h1 {
   .service-grid,
   .metrics-grid,
   .configuration-grid,
-  .latency-grid,
-  .runtime-card {
+  .latency-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
@@ -606,7 +669,8 @@ h1 {
 
   .performance-card,
   .model-card,
-  .runtime-card {
+  .runtime-card,
+  .distribution-card {
     padding: 16px;
   }
 
@@ -618,16 +682,35 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .section-heading {
+  .section-heading,
+  .historical-heading {
     align-items: flex-start;
+  }
+
+  .historical-heading {
+    flex-direction: column;
+  }
+
+  .range-selector {
+    width: 100%;
+  }
+
+  .range-button {
+    flex: 1;
   }
 
   .last-updated {
     font-size: 10px;
   }
 
-  .distribution-card {
-    padding: 14px;
+  .trend-item {
+    grid-template-columns: 75px minmax(60px, 1fr);
+    gap: 10px;
+  }
+
+  .trend-latency {
+    grid-column: 2;
+    text-align: left;
   }
 }
 

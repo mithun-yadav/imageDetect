@@ -12,6 +12,35 @@ describe('Monitoring', () => {
     getOverview: ReturnType<typeof vi.fn>;
   };
 
+  const mockHistorical = {
+    available: true,
+    range: '24h' as const,
+    startDate: '2026-11-26T12:00:00.000Z',
+    endDate: '2026-11-27T12:00:00.000Z',
+    summary: {
+      totalAttempts: 10,
+      successfulInferences: 8,
+      failedInferences: 2,
+      successRate: 80,
+      failureRate: 20,
+      averageProcessingTimeMs: 100.5,
+      averageRequestDurationMs: 120.5,
+      p95RequestDurationMs: 180.25,
+    },
+    trends: [
+      {
+        timestamp: '2026-11-27T11:00:00.000Z',
+        total: 10,
+        successful: 8,
+        failed: 2,
+        averageRequestDurationMs: 120.5,
+      },
+    ],
+    modelPerformance: [],
+    errorDistribution: [],
+    recentActivity: [],
+  };
+
   const mockResponse: MonitoringOverviewResponse = {
     success: true,
     data: {
@@ -48,6 +77,7 @@ describe('Monitoring', () => {
           uptimeSeconds: 3600,
         },
       },
+      historical: mockHistorical,
     },
   };
 

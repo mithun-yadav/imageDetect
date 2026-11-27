@@ -269,6 +269,112 @@
         }
     </section>
 
+
+
+    <section class="section historical-section">
+        <div class="section-heading historical-heading">
+            <div>
+                <h2>Historical performance</h2>
+                <p>Persistent inference metrics collected from the database.</p>
+            </div>
+
+            <div class="range-selector" aria-label="Historical time range">
+                @for (range of availableRanges; track range.value) {
+                <button type="button" class="range-button" [class.range-button-active]="selectedRange() === range.value"
+                    [attr.aria-pressed]="selectedRange() === range.value" (click)="changeRange(range.value)">
+                    {{ range.label }}
+                </button>
+                }
+            </div>
+        </div>
+
+        @if (data.historical.available) {
+        @if (data.historical.summary; as summary) {
+        <div class="metrics-grid historical-metrics">
+            <article class="metric-card">
+                <span class="metric-label">TOTAL ATTEMPTS</span>
+                <strong class="metric-value">{{ summary.totalAttempts | number }}</strong>
+                <span class="metric-description">Across selected period</span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">SUCCESS RATE</span>
+                <strong class="metric-value">{{ formatPercentage(summary.successRate) }}</strong>
+                <span class="metric-description">
+                    {{ summary.successfulInferences | number }} successful
+                </span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">AVERAGE PROCESSING</span>
+                <strong class="metric-value">
+                    {{ formatLatency(summary.averageProcessingTimeMs) }}
+                </strong>
+                <span class="metric-description">Model execution time</span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">P95 REQUEST DURATION</span>
+                <strong class="metric-value">
+                    {{ formatLatency(summary.p95RequestDurationMs) }}
+                </strong>
+                <span class="metric-description">95th percentile</span>
+            </article>
+        </div>
+        }
+
+        <div class="performance-card">
+            <div class="section-heading">
+                <div>
+                    <h3>Inference activity</h3>
+                    <p>Successful and failed inference attempts over time.</p>
+                </div>
+            </div>
+
+            @if (data.historical.trends.length > 0) {
+            <div class="historical-trends">
+                @for (trend of data.historical.trends; track trend.timestamp) {
+                <div class="trend-item">
+                    <div class="trend-details">
+                        <span>
+                            {{ trend.timestamp | date:(selectedRange() === '24h' ? 'shortTime' : 'dd MMM') }}
+                        </span>
+                        <strong>{{ trend.total | number }} attempts</strong>
+                    </div>
+
+                    <div class="trend-bar" role="img"
+                        [attr.aria-label]="trend.successful + ' successful, ' + trend.failed + ' failed'">
+                        <div class="trend-success"
+                            [style.width.%]="trend.total > 0 ? trend.successful / trend.total * 100 : 0"></div>
+                        <div class="trend-failure"
+                            [style.width.%]="trend.total > 0 ? trend.failed / trend.total * 100 : 0"></div>
+                    </div>
+
+                    <span class="trend-latency">
+                        {{ formatLatency(trend.averageRequestDurationMs) }}
+                    </span>
+                </div>
+                }
+            </div>
+            } @else {
+            <p class="metrics-note">
+                No historical inference activity in this period.
+            </p>
+            }
+        </div>
+        } @else {
+        <div class="state-card unavailable-state">
+            <h3>Historical metrics unavailable</h3>
+            <p>
+                Unable to retrieve persistent inference metrics.
+                Live monitoring remains available.
+            </p>
+        </div>
+        }
+    </section>
+
+
+
     <section class="section">
         <div class="section-heading">
             <div>
