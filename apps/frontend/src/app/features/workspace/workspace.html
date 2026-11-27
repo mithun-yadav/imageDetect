@@ -1,0 +1,89 @@
+<section class="workspace">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">COMPUTER VISION</p>
+            <h1>Detection Workspace</h1>
+            <p class="page-description">
+                Upload an image and analyze it using your trained YOLO model.
+            </p>
+        </div>
+
+        <div class="model-indicator">
+            <span class="status-dot"></span>
+            YOLO model
+        </div>
+    </div>
+
+    <div class="workspace-grid">
+        <section class="panel upload-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Input image</h2>
+                    <p>Select an image to begin detection.</p>
+                </div>
+            </div>
+
+            @if (!previewUrl()) {
+            <label class="upload-zone" [class.dragging]="isDragging()" (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+                <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onFileSelected($event)"
+                    aria-label="Select an image" />
+
+                <span class="upload-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 16V4m-5 5 5-5 5 5" />
+                        <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" />
+                    </svg>
+                </span>
+
+                <strong>Drop your image here</strong>
+                <span class="upload-description">
+                    or click to browse your files
+                </span>
+                <span class="file-formats">PNG · JPG · WEBP</span>
+            </label>
+
+            } @else {
+            <cv-detection-preview [previewUrl]="previewUrl()!" [selectedFile]="selectedFile()" [result]="result()"
+                [isProcessing]="isProcessing()" [showAnnotations]="showAnnotations()"
+                [imageAspectRatio]="imageAspectRatio()" [overlayDetections]="overlayDetections()"
+                (annotationsToggle)="toggleAnnotations($event)" (remove)="removeFile()" />
+            }
+
+
+            @if (errorMessage()) {
+            <div class="error-message" role="alert">
+                <strong>Detection error</strong>
+                <p>{{ errorMessage() }}</p>
+            </div>
+            }
+
+            <button class="run-button" type="button" [disabled]="!hasFile() || isProcessing()" (click)="runDetection()">
+                @if (isProcessing()) {
+                <span class="spinner"></span>
+                Processing image...
+                } @else {
+                Run object detection
+                <span aria-hidden="true">→</span>
+                }
+            </button>
+
+            <p class="privacy-note">
+                Images are sent to your configured detection API for processing.
+            </p>
+        </section>
+
+        <div class="results-column">
+            @if (result() && !isProcessing()) {
+            <cv-detection-filters [minimumConfidence]="minimumConfidence()" [availableClasses]="availableClasses()"
+                [classVisibility]="classVisibility()" [totalDetections]="allDetections().length"
+                [visibleDetections]="detections().length" (confidenceChange)="minimumConfidence.set($event)"
+                (classToggle)="toggleClass($event.className, $event.visible)" (reset)="resetFilters()" />
+            }
+
+            <cv-detection-results [result]="result()" [isProcessing]="isProcessing()" [detections]="detections()"
+                [classSummary]="classSummary()" />
+        </div>
+
+    </div>
+</section>

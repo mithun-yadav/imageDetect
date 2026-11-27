@@ -1,0 +1,81 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Detection {
+  id                  String          @id @default(uuid()) @db.Uuid
+
+  // Original uploaded image
+  originalFilename    String
+  storageKey          String          @unique
+  mimeType            String
+  fileSizeBytes       Int
+
+  // Inference metadata
+  model               String
+  confidenceThreshold Float
+  processingTimeMs   Float
+
+  // Image metadata
+  imageWidth          Int
+  imageHeight         Int
+  totalDetections     Int
+
+  // Relationships
+  detections          DetectionItem[]
+
+  createdAt           DateTime        @default(now())
+
+  @@index([createdAt])
+  @@index([model, createdAt])
+}
+
+model DetectionItem {
+  id          String    @id @default(uuid()) @db.Uuid
+
+  detectionId String    @db.Uuid
+  detection   Detection @relation(fields: [detectionId], references: [id], onDelete: Cascade)
+
+  classId     Int
+  className   String
+  confidence  Float
+
+  // Bounding box coordinates
+  x1          Float
+  y1          Float
+  x2          Float
+  y2          Float
+
+  @@index([detectionId])
+  @@index([className])
+}
+
+enum InferenceStatus {
+  SUCCESS
+  FAILED
+}
+
+model InferenceMetric {
+  id                String          @id @default(uuid()) @db.Uuid
+
+  status            InferenceStatus
+
+  modelName         String?
+  processingTimeMs  Float?
+  requestDurationMs Float
+
+  httpStatus        Int?
+  errorCode         String?
+
+  createdAt         DateTime        @default(now())
+
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([modelName, createdAt])
+}

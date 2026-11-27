@@ -43,16 +43,16 @@ def calculate_iou(box_a, box_b):
 
     return intersection_area / union_area
 
-
 # Test cases
-box_a = [0, 0, 100, 100]
+if __name__ == "__main__":
+    box_a = [0, 0, 100, 100]
 
-test_cases = [
-    [50, 0, 150, 100],
-    [200, 200, 300, 300],
-    [0, 0, 100, 100]
-]
+    test_cases = [
+        [50, 0, 150, 100],
+        [200, 200, 300, 300],
+        [0, 0, 100, 100]
+    ]
 
-for box_b in test_cases:
-    iou = calculate_iou(box_a, box_b)
-    print(f"IoU: {iou:.4f}")
+    for box_b in test_cases:
+        iou = calculate_iou(box_a, box_b)
+        print(f"IoU: {iou:.4f}")

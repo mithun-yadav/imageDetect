@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+dist
+coverage
+*.tsbuildinfo
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Version control
+.git
+.gitignore
+
+# Tests and reports
+test
+*.log
+
+# Editor and OS files
+.vscode
+.idea
+.DS_Store

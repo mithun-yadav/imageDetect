@@ -1,0 +1,475 @@
+<main class="monitoring-page">
+    <header class="page-heading">
+        <div>
+            <p class="eyebrow">SYSTEM</p>
+            <h1>Model Monitoring</h1>
+            <p class="page-description">
+                Monitor service health, model availability, and inference performance.
+            </p>
+        </div>
+
+        <div class="heading-actions">
+            @if (lastUpdated(); as updated) {
+            <span class="last-updated">
+                Updated {{ updated | date:'shortTime' }}
+            </span>
+            }
+
+            <button class="refresh-button" type="button" [disabled]="loading()" (click)="loadMonitoring()">
+                <span aria-hidden="true">↻</span>
+                Refresh
+            </button>
+        </div>
+    </header>
+
+    @if (loading() && !monitoring()) {
+    <section class="state-card" aria-live="polite">
+        <div class="loader"></div>
+        <p>Loading system monitoring...</p>
+    </section>
+    } @else if (error() && !monitoring()) {
+    <section class="state-card error-state" role="alert">
+        <h2>Unable to load monitoring data</h2>
+        <p>{{ error() }}</p>
+        <button class="primary-button" type="button" (click)="loadMonitoring()">
+            Try again
+        </button>
+    </section>
+    } @else if (monitoring(); as data) {
+    @if (error()) {
+    <div class="inline-error" role="alert">
+        {{ error() }}
+    </div>
+    }
+
+    <section class="overview-banner" aria-label="Overall system status">
+        <div class="overview-info">
+            <span class="status-indicator" [class.status-healthy]="overallStatus() === 'healthy'"
+                [class.status-degraded]="overallStatus() === 'degraded'">
+            </span>
+
+            <div>
+                <span class="overview-label">OVERALL SYSTEM STATUS</span>
+                <h2>
+                    {{ overallStatus() === 'healthy' ? 'All systems operational' : 'System degraded' }}
+                </h2>
+                <p>
+                    {{ overallStatus() === 'healthy'
+                    ? 'All monitored services are responding normally.'
+                    : 'One or more monitored services need attention.' }}
+                </p>
+            </div>
+        </div>
+
+        <span class="status-pill" [class.status-pill-healthy]="overallStatus() === 'healthy'"
+            [class.status-pill-degraded]="overallStatus() === 'degraded'">
+            {{ overallStatus() === 'healthy' ? 'Healthy' : 'Degraded' }}
+        </span>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>Service health</h2>
+                <p>Current availability of application services and infrastructure.</p>
+            </div>
+        </div>
+
+        <div class="service-grid">
+            <article class="service-card">
+                <div class="service-card-header">
+                    <span class="service-icon">API</span>
+                    <span class="status-pill" [class.status-pill-healthy]="data.api.status === 'healthy'"
+                        [class.status-pill-error]="data.api.status !== 'healthy'">
+                        {{ data.api.status === 'healthy' ? 'Operational' : 'Unavailable' }}
+                    </span>
+                </div>
+
+                <h3>Backend API</h3>
+                <p>Application server and API endpoints.</p>
+
+                <div class="service-detail">
+                    <span>Process uptime</span>
+                    <strong>{{ formatUptime(data.api.uptimeSeconds) }}</strong>
+                </div>
+            </article>
+
+            <article class="service-card">
+                <div class="service-card-header">
+                    <span class="service-icon database-icon">DB</span>
+                    <span class="status-pill" [class.status-pill-healthy]="data.database.status === 'healthy'"
+                        [class.status-pill-error]="data.database.status !== 'healthy'">
+                        {{ data.database.status === 'healthy' ? 'Connected' : 'Unavailable' }}
+                    </span>
+                </div>
+
+                <h3>PostgreSQL</h3>
+                <p>Database connectivity and query response.</p>
+
+                <div class="service-detail">
+                    <span>Response time</span>
+                    <strong>{{ formatLatency(data.database.responseTimeMs) }}</strong>
+                </div>
+            </article>
+
+            <article class="service-card">
+                <div class="service-card-header">
+                    <span class="service-icon inference-icon">ML</span>
+                    <span class="status-pill" [class.status-pill-healthy]="data.inference.status === 'healthy'"
+                        [class.status-pill-error]="data.inference.status !== 'healthy'">
+                        {{ data.inference.status === 'healthy' ? 'Operational' : 'Unavailable' }}
+                    </span>
+                </div>
+
+                <h3>Inference Service</h3>
+                <p>YOLO inference engine availability.</p>
+
+                <div class="service-detail">
+                    <span>Model status</span>
+                    <strong>
+                        @if (data.inference.model; as model) {
+                        {{ model.loaded ? 'Loaded' : 'Not loaded' }}
+                        } @else {
+                        —
+                        }
+                    </strong>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>Inference performance</h2>
+                <p>Runtime statistics collected by the inference service.</p>
+            </div>
+        </div>
+
+        @if (data.inference.metrics; as metrics) {
+        <div class="metrics-grid">
+            <article class="metric-card">
+                <span class="metric-label">TOTAL ATTEMPTS</span>
+                <strong class="metric-value">
+                    {{ metrics.totalAttempts | number }}
+                </strong>
+                <span class="metric-description">Inference executions</span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">SUCCESS RATE</span>
+                <strong class="metric-value">
+                    {{ formatPercentage(metrics.successRate) }}
+                </strong>
+                <span class="metric-description">
+                    {{ metrics.successfulInferences | number }} successful
+                </span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">FAILED INFERENCES</span>
+                <strong class="metric-value">
+                    {{ metrics.failedInferences | number }}
+                </strong>
+                <span class="metric-description">Failed model executions</span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">AVERAGE LATENCY</span>
+                <strong class="metric-value">
+                    {{ formatLatency(metrics.averageLatencyMs) }}
+                </strong>
+                <span class="metric-description">Average execution time</span>
+            </article>
+        </div>
+
+        <div class="performance-card">
+            <div class="section-heading">
+                <div>
+                    <h3>Latency statistics</h3>
+                    <p>Inference execution time in milliseconds.</p>
+                </div>
+            </div>
+
+            <div class="latency-grid">
+                <div>
+                    <span>Minimum</span>
+                    <strong>{{ formatLatency(metrics.minLatencyMs) }}</strong>
+                </div>
+
+                <div>
+                    <span>Maximum</span>
+                    <strong>{{ formatLatency(metrics.maxLatencyMs) }}</strong>
+                </div>
+
+                <div>
+                    <span>Last execution</span>
+                    <strong>{{ formatLatency(metrics.lastLatencyMs) }}</strong>
+                </div>
+
+                <div>
+                    <span>Last inference</span>
+                    <strong>
+                        {{ metrics.lastInferenceAt
+                        ? (metrics.lastInferenceAt | date:'medium')
+                        : '—' }}
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        @if (metrics.totalAttempts === 0) {
+        <p class="metrics-note">
+            No inference activity recorded since the inference service started.
+        </p>
+        }
+
+        @if (metrics.totalAttempts > 0) {
+        <div class="distribution-card">
+            <div class="section-heading">
+                <div>
+                    <h3>Inference reliability</h3>
+                    <p>Successful and failed execution distribution.</p>
+                </div>
+            </div>
+
+            <div class="distribution-bar" role="img" [attr.aria-label]="
+                inferenceDistribution().successful + ' successful and ' +
+                inferenceDistribution().failed + ' failed inferences'
+            ">
+                <div class="distribution-success" [style.width.%]="inferenceDistribution().successPercentage">
+                </div>
+                <div class="distribution-failure" [style.width.%]="inferenceDistribution().failurePercentage">
+                </div>
+            </div>
+
+            <div class="distribution-legend">
+                <div>
+                    <span class="legend-indicator success-indicator"></span>
+                    <span>Successful</span>
+                    <strong>{{ inferenceDistribution().successful | number }}</strong>
+                    <small>{{ inferenceDistribution().successPercentage | number:'1.1-1' }}%</small>
+                </div>
+
+                <div>
+                    <span class="legend-indicator failure-indicator"></span>
+                    <span>Failed</span>
+                    <strong>{{ inferenceDistribution().failed | number }}</strong>
+                    <small>{{ inferenceDistribution().failurePercentage | number:'1.1-1' }}%</small>
+                </div>
+            </div>
+        </div>
+        }
+
+        } @else {
+        <div class="state-card unavailable-state">
+            <h3>Inference metrics unavailable</h3>
+            <p>Metrics will appear when the inference service is available.</p>
+        </div>
+        }
+    </section>
+
+
+
+    <section class="section historical-section">
+        <div class="section-heading historical-heading">
+            <div>
+                <h2>Historical performance</h2>
+                <p>Persistent inference metrics collected from the database.</p>
+            </div>
+
+            <div class="range-selector" aria-label="Historical time range">
+                @for (range of availableRanges; track range.value) {
+                <button type="button" class="range-button" [class.range-button-active]="selectedRange() === range.value"
+                    [attr.aria-pressed]="selectedRange() === range.value" (click)="changeRange(range.value)">
+                    {{ range.label }}
+                </button>
+                }
+            </div>
+        </div>
+
+        @if (data.historical.available) {
+        @if (data.historical.summary; as summary) {
+        <div class="metrics-grid historical-metrics">
+            <article class="metric-card">
+                <span class="metric-label">TOTAL ATTEMPTS</span>
+                <strong class="metric-value">{{ summary.totalAttempts | number }}</strong>
+                <span class="metric-description">Across selected period</span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">SUCCESS RATE</span>
+                <strong class="metric-value">{{ formatPercentage(summary.successRate) }}</strong>
+                <span class="metric-description">
+                    {{ summary.successfulInferences | number }} successful
+                </span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">AVERAGE PROCESSING</span>
+                <strong class="metric-value">
+                    {{ formatLatency(summary.averageProcessingTimeMs) }}
+                </strong>
+                <span class="metric-description">Model execution time</span>
+            </article>
+
+            <article class="metric-card">
+                <span class="metric-label">P95 REQUEST DURATION</span>
+                <strong class="metric-value">
+                    {{ formatLatency(summary.p95RequestDurationMs) }}
+                </strong>
+                <span class="metric-description">95th percentile</span>
+            </article>
+        </div>
+        }
+
+        <div class="performance-card">
+            <div class="section-heading">
+                <div>
+                    <h3>Inference activity</h3>
+                    <p>Successful and failed inference attempts over time.</p>
+                </div>
+            </div>
+
+            @if (data.historical.trends.length > 0) {
+            <div class="historical-trends">
+                @for (trend of data.historical.trends; track trend.timestamp) {
+                <div class="trend-item">
+                    <div class="trend-details">
+                        <span>
+                            {{ trend.timestamp | date:(selectedRange() === '24h' ? 'shortTime' : 'dd MMM') }}
+                        </span>
+                        <strong>{{ trend.total | number }} attempts</strong>
+                    </div>
+
+                    <div class="trend-bar" role="img"
+                        [attr.aria-label]="trend.successful + ' successful, ' + trend.failed + ' failed'">
+                        <div class="trend-success"
+                            [style.width.%]="trend.total > 0 ? trend.successful / trend.total * 100 : 0"></div>
+                        <div class="trend-failure"
+                            [style.width.%]="trend.total > 0 ? trend.failed / trend.total * 100 : 0"></div>
+                    </div>
+
+                    <span class="trend-latency">
+                        {{ formatLatency(trend.averageRequestDurationMs) }}
+                    </span>
+                </div>
+                }
+            </div>
+            } @else {
+            <p class="metrics-note">
+                No historical inference activity in this period.
+            </p>
+            }
+        </div>
+        } @else {
+        <div class="state-card unavailable-state">
+            <h3>Historical metrics unavailable</h3>
+            <p>
+                Unable to retrieve persistent inference metrics.
+                Live monitoring remains available.
+            </p>
+        </div>
+        }
+    </section>
+
+
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>Model configuration</h2>
+                <p>Loaded model and inference runtime configuration.</p>
+            </div>
+        </div>
+
+        @if (data.inference.model; as model) {
+        <div class="model-card">
+            <div class="model-card-header">
+                <div>
+                    <span class="eyebrow">ACTIVE MODEL</span>
+                    <h3>{{ model.name }}</h3>
+                    <p>{{ model.framework }} · v{{ model.frameworkVersion }}</p>
+                </div>
+
+                <span class="status-pill" [class.status-pill-healthy]="model.loaded"
+                    [class.status-pill-error]="!model.loaded">
+                    {{ model.loaded ? 'Loaded' : 'Not loaded' }}
+                </span>
+            </div>
+
+            <div class="configuration-grid">
+                <div class="configuration-item">
+                    <span>Execution device</span>
+                    <strong>{{ model.device }}</strong>
+                </div>
+
+                <div class="configuration-item">
+                    <span>Image size</span>
+                    <strong>{{ model.imageSize }} × {{ model.imageSize }}</strong>
+                </div>
+
+                <div class="configuration-item">
+                    <span>Confidence threshold</span>
+                    <strong>{{ model.confidenceThreshold | number:'1.0-2' }}</strong>
+                </div>
+
+                <div class="configuration-item">
+                    <span>Model framework</span>
+                    <strong>{{ model.framework }}</strong>
+                </div>
+            </div>
+
+            <div class="classes-section">
+                <h4>Supported classes</h4>
+
+                @if (model.classNames.length > 0) {
+                <div class="class-tags">
+                    @for (className of model.classNames; track className) {
+                    <span class="class-tag">{{ className }}</span>
+                    }
+                </div>
+                } @else {
+                <p>No class information available.</p>
+                }
+            </div>
+        </div>
+        } @else {
+        <div class="state-card unavailable-state">
+            <h3>Model information unavailable</h3>
+            <p>The inference service is not currently providing model configuration.</p>
+        </div>
+        }
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>Runtime information</h2>
+                <p>Service uptime and recent inference activity.</p>
+            </div>
+        </div>
+
+        <div class="runtime-card">
+            <div class="runtime-item">
+                <span>API uptime</span>
+                <strong>{{ formatUptime(data.api.uptimeSeconds) }}</strong>
+            </div>
+
+            <div class="runtime-item">
+                <span>Inference uptime</span>
+                <strong>{{ formatUptime(data.inference.metrics?.uptimeSeconds) }}</strong>
+            </div>
+
+            <div class="runtime-item">
+                <span>Last inference</span>
+                <strong>
+                    {{ data.inference.metrics?.lastInferenceAt
+                    ? (data.inference.metrics?.lastInferenceAt | date:'medium')
+                    : 'No activity' }}
+                </strong>
+            </div>
+        </div>
+    </section>
+    }
+</main>

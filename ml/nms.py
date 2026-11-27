@@ -1,5 +1,5 @@
 
-from iou import calculate_iou
+from .iou import calculate_iou
 
 
 def non_max_suppression(

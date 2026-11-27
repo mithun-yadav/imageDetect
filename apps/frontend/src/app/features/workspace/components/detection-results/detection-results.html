@@ -1,0 +1,91 @@
+<section class="panel results-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Detection results</h2>
+            <p>Objects identified in the selected image.</p>
+        </div>
+
+        @if (result()) {
+        <span class="result-badge">Completed</span>
+        }
+    </div>
+
+    @if (isProcessing()) {
+    <div class="empty-state">
+        <span class="processing-spinner"></span>
+        <strong>Analyzing image</strong>
+        <p>Your image is being processed by the YOLO model.</p>
+    </div>
+    } @else if (!result()) {
+    <div class="empty-state">
+        <span class="empty-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="m21 15-5-5L5 21" />
+            </svg>
+        </span>
+
+        <strong>No detection results yet</strong>
+        <p>Upload an image and run detection to see the results here.</p>
+    </div>
+    } @else {
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <span>Total detections</span>
+            <strong>{{ detections().length }}</strong>
+        </div>
+
+        <div class="metric-card">
+            <span>Processing time</span>
+            <strong>
+                {{ result()!.processing_time_ms | number:'1.0-2' }} ms
+            </strong>
+        </div>
+    </div>
+
+    <div class="result-meta">
+        <span>Model</span>
+        <strong>{{ result()!.model }}</strong>
+    </div>
+
+    <div class="result-meta">
+        <span>Confidence threshold</span>
+        <strong>
+            {{ formatConfidence(result()!.confidence_threshold) }}
+        </strong>
+    </div>
+
+    <div class="class-summary">
+        <h3>Detected classes</h3>
+
+        @for (item of classSummary(); track item.name) {
+        <div class="class-row">
+            <span>{{ item.name }}</span>
+            <strong>{{ item.count }}</strong>
+        </div>
+        } @empty {
+        <p class="no-detections">
+            No detections match the current filters.
+        </p>
+        }
+    </div>
+
+    <div class="detection-list">
+        <h3>Detection details</h3>
+
+        @for (detection of detections(); track $index) {
+        <div class="detection-row">
+            <div>
+                <strong>{{ detection.class_name }}</strong>
+                <span>Class ID: {{ detection.class_id }}</span>
+            </div>
+
+            <span class="confidence">
+                {{ formatConfidence(detection.confidence) }}
+            </span>
+        </div>
+        }
+    </div>
+    }
+</section>

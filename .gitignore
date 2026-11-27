@@ -1,6 +1,34 @@
+
+# Existing rules
 .venv/
 __pycache__/
 *.pyc
 .env
 .DS_Store
 runs/
+
+# Node.js dependencies
+node_modules/
+
+# Node.js build artifacts
+dist/
+*.tsbuildinfo
+
+# Downloaded COCO source data
+data/public/coco2017/annotations/
+data/public/coco2017/*.zip
+data/public/coco2017/images/
+data/public/coco2017/download_failures.json
+
+# Generated expanded dataset
+data/training/coco2017-four-class/
+
+# Generated COCO training dataset and backup
+data/training/coco2017-four-class.backup/
+
+# Temporary validator backups
+ml/validate_coco_training_dataset.py.bak
+ml/validate_coco_training_dataset.py.pre-cleanup.bak
+
+# Generated Prisma Client
+/apps/api/src/generated/prisma/

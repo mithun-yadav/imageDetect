@@ -1,0 +1,8 @@
+path: /home/webskitters/Documents/image-detection-system/data/training/coco128-four-class
+train: images/train
+val: images/val
+names:
+  0: person
+  1: bicycle
+  2: car
+  3: dog

@@ -1,0 +1,167 @@
+services:
+  inference:
+    build:
+      context: ./inference
+      dockerfile: Dockerfile
+    container_name: image-detection-inference
+    restart: unless-stopped
+    cpus: 2.0
+    mem_limit: 2g
+    init: true
+    stop_grace_period: 30s
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+      - /home/app/.config/Ultralytics:rw,noexec,nosuid,size=16m,uid=999,gid=999,mode=0755
+
+    environment:
+      MODEL_PATH: /models/best.pt
+      CONFIDENCE_THRESHOLD: "${CONFIDENCE_THRESHOLD:-0.25}"
+      IMAGE_SIZE: "${IMAGE_SIZE:-640}"
+      DEVICE: "${DEVICE:-cpu}"
+
+    volumes:
+      - type: bind
+        source: ${MODEL_HOST_PATH:-./runs/train/coco128-four-class/weights/best.pt}
+        target: /models/best.pt
+        read_only: true
+
+    expose:
+      - "8000"
+
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,json; r=json.load(urllib.request.urlopen('http://localhost:8000/health',timeout=5)); assert r['status']=='ok' and r['model_loaded']"
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: image-detection-api
+    restart: unless-stopped
+    cpus: 1.0
+    mem_limit: 512m
+    init: true
+    stop_grace_period: 30s
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      INFERENCE_BASE_URL: http://inference:8000
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      UPLOAD_STORAGE_PATH: ${UPLOAD_STORAGE_PATH:-/var/lib/image-detection/uploads}
+
+    ports:
+      - "${API_PORT:-3000}:3000"
+
+    depends_on:
+      inference:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:3000/api/v1/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - detection_uploads:/var/lib/image-detection/uploads
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: image-detection-postgres
+    restart: unless-stopped
+    cpus: 1.0
+    mem_limit: 1g
+    init: true
+    stop_grace_period: 30s
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+  
+  migrate:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+      target: builder
+
+    restart: "no"
+
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - ./apps/api/prisma:/app/prisma
+
+    command: ["yarn", "prisma", "migrate", "deploy"]
+
+volumes:
+  postgres_data:
+    name: image-detection-postgres-data
+
+  detection_uploads:
+    name: image-detection-uploads

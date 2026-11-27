@@ -1,0 +1,57 @@
+<section class="filter-panel">
+    <div class="filter-heading">
+        <div>
+            <h3>Detection filters</h3>
+            <p>Refine the objects displayed in the image.</p>
+        </div>
+
+        <button type="button" class="reset-filters" (click)="reset.emit()">
+            Reset filters
+        </button>
+    </div>
+
+    <div class="confidence-filter">
+        <div class="filter-label-row">
+            <label for="confidence-filter">
+                Minimum confidence
+            </label>
+
+            <strong>{{ minimumConfidence() }}%</strong>
+        </div>
+
+        <input id="confidence-filter" type="range" min="0" max="100" step="1" [value]="minimumConfidence()"
+            (input)="onConfidenceChange($event)" />
+
+        <div class="range-labels">
+            <span>0%</span>
+            <span>100%</span>
+        </div>
+    </div>
+
+    <div class="class-filter">
+        <div class="filter-label-row">
+            <span>Object classes</span>
+            <span class="class-count">
+                {{ availableClasses().length }} classes
+            </span>
+        </div>
+
+        <div class="class-options">
+            @for (className of availableClasses(); track className) {
+            <label class="class-option">
+                <input type="checkbox" [checked]="isClassVisible(className)"
+                    (change)="onClassChange(className, $event)" />
+
+                <span>{{ className }}</span>
+            </label>
+            }
+        </div>
+    </div>
+    <div class="filter-summary">
+        Showing
+        <strong>{{ visibleDetections() }}</strong>
+        of
+        <strong>{{ totalDetections() }}</strong>
+        detections
+    </div>
+</section>

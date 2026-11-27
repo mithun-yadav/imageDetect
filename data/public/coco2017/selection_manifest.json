@@ -1,0 +1,4016 @@
+{
+  "source": "COCO 2017 train",
+  "random_seed": 42,
+  "max_images": 500,
+  "selected_image_count": 119,
+  "excluded_coco128_image_count": 128,
+  "target_classes": {
+    "1": "person",
+    "2": "bicycle",
+    "3": "car",
+    "18": "dog"
+  },
+  "yolo_class_mapping": {
+    "1": 0,
+    "2": 1,
+    "3": 2,
+    "18": 3
+  },
+  "size_targets": {
+    "person": {
+      "small": 180,
+      "medium": 135,
+      "large": 135
+    },
+    "bicycle": {
+      "small": 70,
+      "medium": 95,
+      "large": 110
+    },
+    "car": {
+      "small": 140,
+      "medium": 105,
+      "large": 105
+    },
+    "dog": {
+      "small": 55,
+      "medium": 82,
+      "large": 138
+    }
+  },
+  "selected_class_totals": {
+    "person": 582,
+    "bicycle": 329,
+    "car": 414,
+    "dog": 301
+  },
+  "selected_size_totals": {
+    "person": {
+      "medium": 165,
+      "small": 256,
+      "large": 161
+    },
+    "bicycle": {
+      "small": 96,
+      "medium": 123,
+      "large": 110
+    },
+    "car": {
+      "large": 105,
+      "medium": 136,
+      "small": 173
+    },
+    "dog": {
+      "small": 74,
+      "medium": 89,
+      "large": 138
+    }
+  },
+  "remaining_targets": {
+    "person": {
+      "small": 0,
+      "medium": 0,
+      "large": 0
+    },
+    "bicycle": {
+      "small": 0,
+      "medium": 0,
+      "large": 0
+    },
+    "car": {
+      "small": 0,
+      "medium": 0,
+      "large": 0
+    },
+    "dog": {
+      "small": 0,
+      "medium": 0,
+      "large": 0
+    }
+  },
+  "invalid_annotations_skipped": {
+    "person": 1
+  },
+  "crowd_annotations_skipped": {
+    "person": 5212,
+    "car": 334,
+    "bicycle": 57,
+    "dog": 8
+  },
+  "images": [
+    {
+      "image_id": 536265,
+      "file_name": "000000536265.jpg",
+      "width": 640,
+      "height": 391,
+      "coco_url": "http://images.cocodataset.org/train2017/000000536265.jpg",
+      "class_counts": {
+        "bicycle": 13,
+        "car": 8,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 12,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 13,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 5,
+          "medium": 2,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 90218,
+      "file_name": "000000090218.jpg",
+      "width": 427,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000090218.jpg",
+      "class_counts": {
+        "person": 13,
+        "bicycle": 13,
+        "car": 7
+      },
+      "object_sizes": {
+        "person": {
+          "small": 9,
+          "medium": 1,
+          "large": 3
+        },
+        "bicycle": {
+          "small": 13,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 7,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 92869,
+      "file_name": "000000092869.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000092869.jpg",
+      "class_counts": {
+        "dog": 13,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 12,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 13,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 72984,
+      "file_name": "000000072984.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000072984.jpg",
+      "class_counts": {
+        "car": 6,
+        "person": 13,
+        "bicycle": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 10,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 5,
+          "medium": 8,
+          "large": 0
+        },
+        "car": {
+          "small": 1,
+          "medium": 4,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 339547,
+      "file_name": "000000339547.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000339547.jpg",
+      "class_counts": {
+        "bicycle": 10,
+        "car": 12,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 13,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 10,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 11,
+          "medium": 1,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 197705,
+      "file_name": "000000197705.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000197705.jpg",
+      "class_counts": {
+        "person": 13,
+        "bicycle": 13,
+        "car": 5
+      },
+      "object_sizes": {
+        "person": {
+          "small": 10,
+          "medium": 2,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 12,
+          "medium": 1,
+          "large": 0
+        },
+        "car": {
+          "small": 5,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 369504,
+      "file_name": "000000369504.jpg",
+      "width": 640,
+      "height": 216,
+      "coco_url": "http://images.cocodataset.org/train2017/000000369504.jpg",
+      "class_counts": {
+        "bicycle": 13,
+        "car": 10,
+        "person": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 6,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 13,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 8,
+          "medium": 2,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 139500,
+      "file_name": "000000139500.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000139500.jpg",
+      "class_counts": {
+        "dog": 12,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 7,
+          "medium": 5,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 10,
+          "medium": 2,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 398285,
+      "file_name": "000000398285.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000398285.jpg",
+      "class_counts": {
+        "dog": 13,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 5,
+          "medium": 8,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 8,
+          "medium": 4,
+          "large": 1
+        }
+      }
+    },
+    {
+      "image_id": 164598,
+      "file_name": "000000164598.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000164598.jpg",
+      "class_counts": {
+        "dog": 12,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 8,
+          "medium": 5,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 9,
+          "medium": 3,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 157804,
+      "file_name": "000000157804.jpg",
+      "width": 550,
+      "height": 375,
+      "coco_url": "http://images.cocodataset.org/train2017/000000157804.jpg",
+      "class_counts": {
+        "dog": 12,
+        "person": 11
+      },
+      "object_sizes": {
+        "person": {
+          "small": 10,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 12,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 6233,
+      "file_name": "000000006233.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000006233.jpg",
+      "class_counts": {
+        "bicycle": 7,
+        "person": 13,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 13,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 4,
+          "medium": 3,
+          "large": 0
+        },
+        "car": {
+          "small": 10,
+          "medium": 3,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 16950,
+      "file_name": "000000016950.jpg",
+      "width": 308,
+      "height": 233,
+      "coco_url": "http://images.cocodataset.org/train2017/000000016950.jpg",
+      "class_counts": {
+        "dog": 19
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 3,
+          "medium": 15,
+          "large": 1
+        }
+      }
+    },
+    {
+      "image_id": 105647,
+      "file_name": "000000105647.jpg",
+      "width": 640,
+      "height": 429,
+      "coco_url": "http://images.cocodataset.org/train2017/000000105647.jpg",
+      "class_counts": {
+        "bicycle": 10,
+        "car": 7,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 6,
+          "medium": 6,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 2,
+          "medium": 6,
+          "large": 2
+        },
+        "car": {
+          "small": 6,
+          "medium": 0,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 17882,
+      "file_name": "000000017882.jpg",
+      "width": 480,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000017882.jpg",
+      "class_counts": {
+        "bicycle": 14,
+        "person": 9,
+        "car": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 9,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 13,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 1,
+          "large": 2
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 371382,
+      "file_name": "000000371382.jpg",
+      "width": 366,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000371382.jpg",
+      "class_counts": {
+        "person": 13,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 5,
+          "medium": 6,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 2,
+          "medium": 9,
+          "large": 2
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 574953,
+      "file_name": "000000574953.jpg",
+      "width": 500,
+      "height": 333,
+      "coco_url": "http://images.cocodataset.org/train2017/000000574953.jpg",
+      "class_counts": {
+        "car": 2,
+        "person": 13,
+        "bicycle": 12
+      },
+      "object_sizes": {
+        "person": {
+          "small": 6,
+          "medium": 6,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 2,
+          "medium": 8,
+          "large": 2
+        },
+        "car": {
+          "small": 1,
+          "medium": 1,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 294918,
+      "file_name": "000000294918.jpg",
+      "width": 600,
+      "height": 450,
+      "coco_url": "http://images.cocodataset.org/train2017/000000294918.jpg",
+      "class_counts": {
+        "bicycle": 11,
+        "car": 2,
+        "person": 10
+      },
+      "object_sizes": {
+        "person": {
+          "small": 4,
+          "medium": 4,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 8,
+          "large": 3
+        },
+        "car": {
+          "small": 1,
+          "medium": 1,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 452700,
+      "file_name": "000000452700.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000452700.jpg",
+      "class_counts": {
+        "bicycle": 1,
+        "person": 13,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 11,
+          "medium": 2,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 5,
+          "medium": 7,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 7228,
+      "file_name": "000000007228.jpg",
+      "width": 500,
+      "height": 375,
+      "coco_url": "http://images.cocodataset.org/train2017/000000007228.jpg",
+      "class_counts": {
+        "bicycle": 5,
+        "car": 11,
+        "person": 11
+      },
+      "object_sizes": {
+        "person": {
+          "small": 5,
+          "medium": 3,
+          "large": 3
+        },
+        "bicycle": {
+          "small": 2,
+          "medium": 3,
+          "large": 0
+        },
+        "car": {
+          "small": 9,
+          "medium": 2,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 335184,
+      "file_name": "000000335184.jpg",
+      "width": 640,
+      "height": 429,
+      "coco_url": "http://images.cocodataset.org/train2017/000000335184.jpg",
+      "class_counts": {
+        "person": 13,
+        "bicycle": 1,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 3,
+          "medium": 5,
+          "large": 5
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 12,
+          "medium": 1,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 229583,
+      "file_name": "000000229583.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000229583.jpg",
+      "class_counts": {
+        "person": 13,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 10,
+          "medium": 3,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 7,
+          "medium": 6,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 449250,
+      "file_name": "000000449250.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000449250.jpg",
+      "class_counts": {
+        "bicycle": 13,
+        "person": 11
+      },
+      "object_sizes": {
+        "person": {
+          "small": 7,
+          "medium": 4,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 2,
+          "medium": 10,
+          "large": 1
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 346653,
+      "file_name": "000000346653.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000346653.jpg",
+      "class_counts": {
+        "car": 12,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 8,
+          "medium": 4,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 6,
+          "medium": 5,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 292226,
+      "file_name": "000000292226.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000292226.jpg",
+      "class_counts": {
+        "bicycle": 9,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 7,
+          "large": 6
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 5,
+          "large": 3
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 438196,
+      "file_name": "000000438196.jpg",
+      "width": 640,
+      "height": 429,
+      "coco_url": "http://images.cocodataset.org/train2017/000000438196.jpg",
+      "class_counts": {
+        "person": 13,
+        "bicycle": 1,
+        "car": 12
+      },
+      "object_sizes": {
+        "person": {
+          "small": 2,
+          "medium": 6,
+          "large": 5
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 11,
+          "medium": 1,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 315555,
+      "file_name": "000000315555.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000315555.jpg",
+      "class_counts": {
+        "dog": 18,
+        "person": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 3
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 6,
+          "medium": 10,
+          "large": 2
+        }
+      }
+    },
+    {
+      "image_id": 331315,
+      "file_name": "000000331315.jpg",
+      "width": 640,
+      "height": 359,
+      "coco_url": "http://images.cocodataset.org/train2017/000000331315.jpg",
+      "class_counts": {
+        "bicycle": 2,
+        "car": 12,
+        "person": 9
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 7,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 2,
+          "large": 0
+        },
+        "car": {
+          "small": 12,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 231524,
+      "file_name": "000000231524.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000231524.jpg",
+      "class_counts": {
+        "bicycle": 8,
+        "car": 2,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 7,
+          "large": 5
+        },
+        "bicycle": {
+          "small": 2,
+          "medium": 4,
+          "large": 2
+        },
+        "car": {
+          "small": 1,
+          "medium": 1,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 243333,
+      "file_name": "000000243333.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000243333.jpg",
+      "class_counts": {
+        "person": 10,
+        "car": 12
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 2,
+          "large": 7
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 7,
+          "medium": 5,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 349472,
+      "file_name": "000000349472.jpg",
+      "width": 640,
+      "height": 360,
+      "coco_url": "http://images.cocodataset.org/train2017/000000349472.jpg",
+      "class_counts": {
+        "person": 10,
+        "car": 12
+      },
+      "object_sizes": {
+        "person": {
+          "small": 2,
+          "medium": 6,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 4,
+          "medium": 7,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 364234,
+      "file_name": "000000364234.jpg",
+      "width": 500,
+      "height": 375,
+      "coco_url": "http://images.cocodataset.org/train2017/000000364234.jpg",
+      "class_counts": {
+        "car": 3,
+        "bicycle": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 11,
+          "large": 2
+        },
+        "car": {
+          "small": 1,
+          "medium": 1,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 315601,
+      "file_name": "000000315601.jpg",
+      "width": 640,
+      "height": 424,
+      "coco_url": "http://images.cocodataset.org/train2017/000000315601.jpg",
+      "class_counts": {
+        "person": 9,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 4,
+          "medium": 5,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 3,
+          "medium": 9,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 188889,
+      "file_name": "000000188889.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000188889.jpg",
+      "class_counts": {
+        "car": 4,
+        "bicycle": 12
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 4,
+          "large": 8
+        },
+        "car": {
+          "small": 0,
+          "medium": 2,
+          "large": 2
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 537289,
+      "file_name": "000000537289.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000537289.jpg",
+      "class_counts": {
+        "bicycle": 7,
+        "person": 12,
+        "car": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 3,
+          "medium": 8,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 5,
+          "large": 1
+        },
+        "car": {
+          "small": 3,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 165350,
+      "file_name": "000000165350.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000165350.jpg",
+      "class_counts": {
+        "bicycle": 8,
+        "person": 7,
+        "car": 2
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 6
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 4,
+          "large": 4
+        },
+        "car": {
+          "small": 0,
+          "medium": 2,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 357322,
+      "file_name": "000000357322.jpg",
+      "width": 480,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000357322.jpg",
+      "class_counts": {
+        "dog": 10,
+        "person": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 9,
+          "large": 1
+        }
+      }
+    },
+    {
+      "image_id": 468953,
+      "file_name": "000000468953.jpg",
+      "width": 640,
+      "height": 614,
+      "coco_url": "http://images.cocodataset.org/train2017/000000468953.jpg",
+      "class_counts": {
+        "bicycle": 1,
+        "person": 6,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 3,
+          "medium": 1,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "car": {
+          "small": 4,
+          "medium": 8,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 536725,
+      "file_name": "000000536725.jpg",
+      "width": 392,
+      "height": 500,
+      "coco_url": "http://images.cocodataset.org/train2017/000000536725.jpg",
+      "class_counts": {
+        "person": 1,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 13
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 293825,
+      "file_name": "000000293825.jpg",
+      "width": 640,
+      "height": 465,
+      "coco_url": "http://images.cocodataset.org/train2017/000000293825.jpg",
+      "class_counts": {
+        "car": 12,
+        "person": 8
+      },
+      "object_sizes": {
+        "person": {
+          "small": 6,
+          "medium": 1,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 8,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 80117,
+      "file_name": "000000080117.jpg",
+      "width": 640,
+      "height": 360,
+      "coco_url": "http://images.cocodataset.org/train2017/000000080117.jpg",
+      "class_counts": {
+        "person": 1,
+        "car": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 1,
+          "medium": 12,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 505629,
+      "file_name": "000000505629.jpg",
+      "width": 640,
+      "height": 288,
+      "coco_url": "http://images.cocodataset.org/train2017/000000505629.jpg",
+      "class_counts": {
+        "dog": 5,
+        "car": 4,
+        "person": 7
+      },
+      "object_sizes": {
+        "person": {
+          "small": 2,
+          "medium": 3,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 1,
+          "medium": 3,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 4,
+          "large": 1
+        }
+      }
+    },
+    {
+      "image_id": 211892,
+      "file_name": "000000211892.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000211892.jpg",
+      "class_counts": {
+        "dog": 7,
+        "person": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 6,
+          "large": 1
+        }
+      }
+    },
+    {
+      "image_id": 444799,
+      "file_name": "000000444799.jpg",
+      "width": 640,
+      "height": 494,
+      "coco_url": "http://images.cocodataset.org/train2017/000000444799.jpg",
+      "class_counts": {
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 13
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 127313,
+      "file_name": "000000127313.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000127313.jpg",
+      "class_counts": {
+        "dog": 10,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 2,
+          "medium": 7,
+          "large": 1
+        }
+      }
+    },
+    {
+      "image_id": 494721,
+      "file_name": "000000494721.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000494721.jpg",
+      "class_counts": {
+        "dog": 9,
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 12,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 1,
+          "medium": 5,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 6229,
+      "file_name": "000000006229.jpg",
+      "width": 640,
+      "height": 413,
+      "coco_url": "http://images.cocodataset.org/train2017/000000006229.jpg",
+      "class_counts": {
+        "dog": 10
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 1,
+          "medium": 5,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 534772,
+      "file_name": "000000534772.jpg",
+      "width": 299,
+      "height": 409,
+      "coco_url": "http://images.cocodataset.org/train2017/000000534772.jpg",
+      "class_counts": {
+        "person": 12
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 12
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 64824,
+      "file_name": "000000064824.jpg",
+      "width": 640,
+      "height": 318,
+      "coco_url": "http://images.cocodataset.org/train2017/000000064824.jpg",
+      "class_counts": {
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 12
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 189318,
+      "file_name": "000000189318.jpg",
+      "width": 640,
+      "height": 236,
+      "coco_url": "http://images.cocodataset.org/train2017/000000189318.jpg",
+      "class_counts": {
+        "person": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 12
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 554587,
+      "file_name": "000000554587.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000554587.jpg",
+      "class_counts": {
+        "person": 13,
+        "car": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 12
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 3,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 161505,
+      "file_name": "000000161505.jpg",
+      "width": 640,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000161505.jpg",
+      "class_counts": {
+        "dog": 13,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 6,
+          "medium": 7,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 431092,
+      "file_name": "000000431092.jpg",
+      "width": 640,
+      "height": 428,
+      "coco_url": "http://images.cocodataset.org/train2017/000000431092.jpg",
+      "class_counts": {
+        "dog": 6,
+        "person": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 2,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 5,
+          "large": 1
+        }
+      }
+    },
+    {
+      "image_id": 528467,
+      "file_name": "000000528467.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000528467.jpg",
+      "class_counts": {
+        "bicycle": 13
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 4,
+          "large": 8
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 366111,
+      "file_name": "000000366111.jpg",
+      "width": 500,
+      "height": 319,
+      "coco_url": "http://images.cocodataset.org/train2017/000000366111.jpg",
+      "class_counts": {
+        "bicycle": 4,
+        "car": 2,
+        "person": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 3,
+          "large": 2
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        },
+        "car": {
+          "small": 0,
+          "medium": 1,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 385145,
+      "file_name": "000000385145.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000385145.jpg",
+      "class_counts": {
+        "bicycle": 12,
+        "car": 1,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 3,
+          "medium": 3,
+          "large": 6
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 277470,
+      "file_name": "000000277470.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000277470.jpg",
+      "class_counts": {
+        "bicycle": 13,
+        "person": 8
+      },
+      "object_sizes": {
+        "person": {
+          "small": 7,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 6,
+          "large": 7
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 196510,
+      "file_name": "000000196510.jpg",
+      "width": 639,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000196510.jpg",
+      "class_counts": {
+        "bicycle": 7,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 1,
+          "large": 6
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 309519,
+      "file_name": "000000309519.jpg",
+      "width": 466,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000309519.jpg",
+      "class_counts": {
+        "car": 7
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 1,
+          "medium": 0,
+          "large": 6
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 127450,
+      "file_name": "000000127450.jpg",
+      "width": 640,
+      "height": 366,
+      "coco_url": "http://images.cocodataset.org/train2017/000000127450.jpg",
+      "class_counts": {
+        "car": 8,
+        "person": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 2,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 2,
+          "large": 6
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 256560,
+      "file_name": "000000256560.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000256560.jpg",
+      "class_counts": {
+        "car": 9
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 3,
+          "large": 6
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 574280,
+      "file_name": "000000574280.jpg",
+      "width": 480,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000574280.jpg",
+      "class_counts": {
+        "bicycle": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 6
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 251442,
+      "file_name": "000000251442.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000251442.jpg",
+      "class_counts": {
+        "dog": 9,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 1,
+          "medium": 1,
+          "large": 7
+        }
+      }
+    },
+    {
+      "image_id": 80792,
+      "file_name": "000000080792.jpg",
+      "width": 640,
+      "height": 403,
+      "coco_url": "http://images.cocodataset.org/train2017/000000080792.jpg",
+      "class_counts": {
+        "car": 11
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 4,
+          "medium": 2,
+          "large": 5
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 476904,
+      "file_name": "000000476904.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000476904.jpg",
+      "class_counts": {
+        "car": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 1,
+          "large": 5
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 49495,
+      "file_name": "000000049495.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000049495.jpg",
+      "class_counts": {
+        "car": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 1,
+          "medium": 0,
+          "large": 5
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 101891,
+      "file_name": "000000101891.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000101891.jpg",
+      "class_counts": {
+        "bicycle": 3,
+        "car": 5
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 1,
+          "large": 2
+        },
+        "car": {
+          "small": 0,
+          "medium": 2,
+          "large": 3
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 149679,
+      "file_name": "000000149679.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000149679.jpg",
+      "class_counts": {
+        "bicycle": 3,
+        "car": 5,
+        "person": 9
+      },
+      "object_sizes": {
+        "person": {
+          "small": 6,
+          "medium": 0,
+          "large": 3
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        },
+        "car": {
+          "small": 3,
+          "medium": 0,
+          "large": 2
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 440811,
+      "file_name": "000000440811.jpg",
+      "width": 480,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000440811.jpg",
+      "class_counts": {
+        "bicycle": 6,
+        "car": 2
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 1,
+          "large": 5
+        },
+        "car": {
+          "small": 0,
+          "medium": 2,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 321185,
+      "file_name": "000000321185.jpg",
+      "width": 640,
+      "height": 425,
+      "coco_url": "http://images.cocodataset.org/train2017/000000321185.jpg",
+      "class_counts": {
+        "bicycle": 5,
+        "car": 11,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 5
+        },
+        "car": {
+          "small": 10,
+          "medium": 1,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 565374,
+      "file_name": "000000565374.jpg",
+      "width": 640,
+      "height": 360,
+      "coco_url": "http://images.cocodataset.org/train2017/000000565374.jpg",
+      "class_counts": {
+        "bicycle": 5,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 5
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 40625,
+      "file_name": "000000040625.jpg",
+      "width": 500,
+      "height": 375,
+      "coco_url": "http://images.cocodataset.org/train2017/000000040625.jpg",
+      "class_counts": {
+        "bicycle": 5
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 5
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 520427,
+      "file_name": "000000520427.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000520427.jpg",
+      "class_counts": {
+        "bicycle": 13,
+        "person": 11
+      },
+      "object_sizes": {
+        "person": {
+          "small": 8,
+          "medium": 2,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 4,
+          "medium": 4,
+          "large": 5
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 374361,
+      "file_name": "000000374361.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000374361.jpg",
+      "class_counts": {
+        "bicycle": 6,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 1,
+          "large": 5
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 328120,
+      "file_name": "000000328120.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000328120.jpg",
+      "class_counts": {
+        "bicycle": 12,
+        "person": 2,
+        "car": 2
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 6,
+          "large": 5
+        },
+        "car": {
+          "small": 2,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 4275,
+      "file_name": "000000004275.jpg",
+      "width": 457,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000004275.jpg",
+      "class_counts": {
+        "car": 8,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 1,
+          "medium": 3,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 54305,
+      "file_name": "000000054305.jpg",
+      "width": 466,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000054305.jpg",
+      "class_counts": {
+        "car": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 2,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 68789,
+      "file_name": "000000068789.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000068789.jpg",
+      "class_counts": {
+        "car": 11
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 2,
+          "medium": 5,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 499871,
+      "file_name": "000000499871.jpg",
+      "width": 640,
+      "height": 498,
+      "coco_url": "http://images.cocodataset.org/train2017/000000499871.jpg",
+      "class_counts": {
+        "car": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 2,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 95267,
+      "file_name": "000000095267.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000095267.jpg",
+      "class_counts": {
+        "car": 4,
+        "person": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 39555,
+      "file_name": "000000039555.jpg",
+      "width": 500,
+      "height": 320,
+      "coco_url": "http://images.cocodataset.org/train2017/000000039555.jpg",
+      "class_counts": {
+        "car": 5,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 1,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 424301,
+      "file_name": "000000424301.jpg",
+      "width": 640,
+      "height": 468,
+      "coco_url": "http://images.cocodataset.org/train2017/000000424301.jpg",
+      "class_counts": {
+        "car": 8,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 2,
+          "medium": 2,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 253528,
+      "file_name": "000000253528.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000253528.jpg",
+      "class_counts": {
+        "car": 7,
+        "person": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 2,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 3,
+          "large": 4
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 216861,
+      "file_name": "000000216861.jpg",
+      "width": 640,
+      "height": 482,
+      "coco_url": "http://images.cocodataset.org/train2017/000000216861.jpg",
+      "class_counts": {
+        "dog": 4,
+        "bicycle": 2,
+        "person": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 3,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 1,
+          "medium": 0,
+          "large": 1
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 263974,
+      "file_name": "000000263974.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000263974.jpg",
+      "class_counts": {
+        "bicycle": 4,
+        "person": 9,
+        "car": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 3,
+          "medium": 3,
+          "large": 3
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 1,
+          "large": 3
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        }
+      }
+    },
+    {
+      "image_id": 483074,
+      "file_name": "000000483074.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000483074.jpg",
+      "class_counts": {
+        "dog": 5
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 5
+        }
+      }
+    },
+    {
+      "image_id": 296760,
+      "file_name": "000000296760.jpg",
+      "width": 500,
+      "height": 400,
+      "coco_url": "http://images.cocodataset.org/train2017/000000296760.jpg",
+      "class_counts": {
+        "dog": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 285258,
+      "file_name": "000000285258.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000285258.jpg",
+      "class_counts": {
+        "dog": 5,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 1,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 149410,
+      "file_name": "000000149410.jpg",
+      "width": 640,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000149410.jpg",
+      "class_counts": {
+        "dog": 4,
+        "person": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 2,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 561062,
+      "file_name": "000000561062.jpg",
+      "width": 640,
+      "height": 353,
+      "coco_url": "http://images.cocodataset.org/train2017/000000561062.jpg",
+      "class_counts": {
+        "dog": 4,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 111131,
+      "file_name": "000000111131.jpg",
+      "width": 640,
+      "height": 478,
+      "coco_url": "http://images.cocodataset.org/train2017/000000111131.jpg",
+      "class_counts": {
+        "dog": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 354569,
+      "file_name": "000000354569.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000354569.jpg",
+      "class_counts": {
+        "dog": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 524382,
+      "file_name": "000000524382.jpg",
+      "width": 640,
+      "height": 439,
+      "coco_url": "http://images.cocodataset.org/train2017/000000524382.jpg",
+      "class_counts": {
+        "dog": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 337551,
+      "file_name": "000000337551.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000337551.jpg",
+      "class_counts": {
+        "dog": 5
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 1,
+          "medium": 0,
+          "large": 4
+        }
+      }
+    },
+    {
+      "image_id": 256800,
+      "file_name": "000000256800.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000256800.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 171408,
+      "file_name": "000000171408.jpg",
+      "width": 640,
+      "height": 325,
+      "coco_url": "http://images.cocodataset.org/train2017/000000171408.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 206469,
+      "file_name": "000000206469.jpg",
+      "width": 500,
+      "height": 500,
+      "coco_url": "http://images.cocodataset.org/train2017/000000206469.jpg",
+      "class_counts": {
+        "dog": 4,
+        "person": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 1,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 252213,
+      "file_name": "000000252213.jpg",
+      "width": 640,
+      "height": 628,
+      "coco_url": "http://images.cocodataset.org/train2017/000000252213.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 232432,
+      "file_name": "000000232432.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000232432.jpg",
+      "class_counts": {
+        "dog": 3,
+        "person": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 3,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 188546,
+      "file_name": "000000188546.jpg",
+      "width": 427,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000188546.jpg",
+      "class_counts": {
+        "dog": 3,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 1,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 313950,
+      "file_name": "000000313950.jpg",
+      "width": 640,
+      "height": 425,
+      "coco_url": "http://images.cocodataset.org/train2017/000000313950.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 129806,
+      "file_name": "000000129806.jpg",
+      "width": 402,
+      "height": 402,
+      "coco_url": "http://images.cocodataset.org/train2017/000000129806.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 212263,
+      "file_name": "000000212263.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000212263.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 374340,
+      "file_name": "000000374340.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000374340.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 283152,
+      "file_name": "000000283152.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000283152.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 573759,
+      "file_name": "000000573759.jpg",
+      "width": 500,
+      "height": 365,
+      "coco_url": "http://images.cocodataset.org/train2017/000000573759.jpg",
+      "class_counts": {
+        "dog": 3,
+        "person": 1
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 500507,
+      "file_name": "000000500507.jpg",
+      "width": 640,
+      "height": 457,
+      "coco_url": "http://images.cocodataset.org/train2017/000000500507.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 25148,
+      "file_name": "000000025148.jpg",
+      "width": 500,
+      "height": 375,
+      "coco_url": "http://images.cocodataset.org/train2017/000000025148.jpg",
+      "class_counts": {
+        "dog": 3,
+        "person": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 3,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 330037,
+      "file_name": "000000330037.jpg",
+      "width": 640,
+      "height": 471,
+      "coco_url": "http://images.cocodataset.org/train2017/000000330037.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 131714,
+      "file_name": "000000131714.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000131714.jpg",
+      "class_counts": {
+        "dog": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 1,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 475995,
+      "file_name": "000000475995.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000475995.jpg",
+      "class_counts": {
+        "dog": 3,
+        "person": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 4
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 100485,
+      "file_name": "000000100485.jpg",
+      "width": 640,
+      "height": 424,
+      "coco_url": "http://images.cocodataset.org/train2017/000000100485.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 315423,
+      "file_name": "000000315423.jpg",
+      "width": 640,
+      "height": 427,
+      "coco_url": "http://images.cocodataset.org/train2017/000000315423.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 331419,
+      "file_name": "000000331419.jpg",
+      "width": 640,
+      "height": 428,
+      "coco_url": "http://images.cocodataset.org/train2017/000000331419.jpg",
+      "class_counts": {
+        "dog": 4
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 1,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 133295,
+      "file_name": "000000133295.jpg",
+      "width": 500,
+      "height": 375,
+      "coco_url": "http://images.cocodataset.org/train2017/000000133295.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 289618,
+      "file_name": "000000289618.jpg",
+      "width": 640,
+      "height": 480,
+      "coco_url": "http://images.cocodataset.org/train2017/000000289618.jpg",
+      "class_counts": {
+        "dog": 6
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 3,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 515717,
+      "file_name": "000000515717.jpg",
+      "width": 640,
+      "height": 478,
+      "coco_url": "http://images.cocodataset.org/train2017/000000515717.jpg",
+      "class_counts": {
+        "dog": 3
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 209289,
+      "file_name": "000000209289.jpg",
+      "width": 640,
+      "height": 426,
+      "coco_url": "http://images.cocodataset.org/train2017/000000209289.jpg",
+      "class_counts": {
+        "dog": 3,
+        "person": 2
+      },
+      "object_sizes": {
+        "person": {
+          "small": 1,
+          "medium": 0,
+          "large": 1
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 3
+        }
+      }
+    },
+    {
+      "image_id": 423826,
+      "file_name": "000000423826.jpg",
+      "width": 480,
+      "height": 640,
+      "coco_url": "http://images.cocodataset.org/train2017/000000423826.jpg",
+      "class_counts": {
+        "dog": 2
+      },
+      "object_sizes": {
+        "person": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "bicycle": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "car": {
+          "small": 0,
+          "medium": 0,
+          "large": 0
+        },
+        "dog": {
+          "small": 0,
+          "medium": 0,
+          "large": 2
+        }
+      }
+    }
+  ]
+}
